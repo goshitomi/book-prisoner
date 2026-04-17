@@ -1,0 +1,108 @@
+.root {
+  padding: 88px 24px 48px;
+  min-height: 100vh;
+}
+
+.heading {
+  font-family: var(--font-en);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 20px;
+}
+
+.headingKo {
+  display: block;
+  font-family: var(--font-ko);
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: currentColor;
+  margin-top: 4px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table thead th {
+  font-family: var(--font-ko);
+  font-weight: 500;
+  font-size: 12px;
+  text-align: left;
+  letter-spacing: 0.05em;
+  padding: 10px 12px;
+  border-bottom: 1px solid currentColor;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.table tbody td {
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+  vertical-align: top;
+}
+
+.table tbody tr {
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.table tbody tr:hover {
+  background: var(--color-book-fg);
+  color: var(--color-book-bg);
+}
+
+.callNo {
+  font-family: var(--font-en);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  font-size: 13px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.title {
+  font-family: var(--font-ko);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.authors {
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.regDate {
+  font-family: var(--font-en);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.table tbody tr:hover .authors,
+.table tbody tr:hover .regDate {
+  color: inherit;
+}
+
+.empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.fallbackBadge {
+  display: inline-block;
+  border: 1px dashed var(--color-accent);
+  color: var(--color-accent);
+  padding: 6px 10px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
+}

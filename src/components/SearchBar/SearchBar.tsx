@@ -1,0 +1,57 @@
+"use client";
+
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import styles from "./SearchBar.module.css";
+
+export function SearchBar() {
+  const router = useRouter();
+  const params = useSearchParams();
+  const [value, setValue] = useState(params.get("q") ?? "");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setValue(params.get("q") ?? "");
+  }, [params]);
+
+  // "/" 단축키 포커스
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "/" && document.activeElement?.tagName !== "INPUT") {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const q = value.trim();
+    if (q) {
+      router.push(`/?q=${encodeURIComponent(q)}`);
+    } else {
+      router.push("/");
+    }
+  };
+
+  return (
+    <form className={styles.form} onSubmit={onSubmit} role="search">
+      <input
+        ref={inputRef}
+        className={styles.input}
+        type="search"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="수감자 성명 또는 주민등록번호(ISBN)"
+        aria-label="수감자 검색"
+        spellCheck={false}
+        autoComplete="off"
+      />
+      <button type="submit" className={styles.submit}>
+        <span>조회</span>
+      </button>
+    </form>
+  );
+}

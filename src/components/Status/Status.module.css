@@ -1,0 +1,59 @@
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px;
+  text-align: center;
+  font-family: var(--font-ko);
+}
+
+.inner {
+  max-width: 420px;
+}
+
+.kicker {
+  font-family: var(--font-en);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 16px;
+}
+
+.heading {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+  line-height: 1.3;
+}
+
+.body {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin: 0 0 24px;
+  line-height: 1.5;
+}
+
+.button {
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+  padding: 10px 20px;
+  font-family: var(--font-ko);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: currentColor;
+}
+
+.panelBook .button:hover {
+  color: var(--color-book-bg);
+}
+.panelPrisoner .button:hover {
+  color: var(--color-prisoner-bg);
+}

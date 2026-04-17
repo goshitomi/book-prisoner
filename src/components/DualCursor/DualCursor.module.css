@@ -1,0 +1,16 @@
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  margin: calc(var(--cursor-size) * -0.5) 0 0 calc(var(--cursor-size) * -0.5);
+  will-change: transform;
+  opacity: 0;
+  transition: opacity 0.08s;
+  mix-blend-mode: difference;
+  background: #fff;
+}

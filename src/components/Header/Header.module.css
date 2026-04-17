@@ -1,0 +1,78 @@
+.root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: calc(100vw * var(--left-ratio)) 1fr;
+  z-index: 80;
+  height: 64px;
+  pointer-events: none;
+}
+
+.root.swapped {
+  grid-template-columns: 1fr calc(100vw * var(--left-ratio));
+}
+
+.side {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  pointer-events: auto;
+  border-bottom: 1px solid currentColor;
+  backdrop-filter: blur(12px);
+}
+
+.bookSide {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-book-fg);
+  justify-content: flex-start;
+}
+
+.prisonerSide {
+  background: rgba(0, 0, 0, 0.92);
+  color: var(--color-prisoner-fg);
+  justify-content: flex-end;
+}
+
+.brand {
+  font-family: var(--font-en);
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.brand strong {
+  font-family: var(--font-ko);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-right: 10px;
+}
+
+.brand .ko {
+  font-size: 15px;
+}
+
+.swapBtn {
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+  padding: 6px 12px;
+  font-family: var(--font-ko);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.swapBtn:hover {
+  background: currentColor;
+}
+.swapBtn:hover span {
+  color: var(--color-prisoner-bg);
+}
+.prisonerSide .swapBtn:hover span {
+  color: var(--color-book-bg);
+}

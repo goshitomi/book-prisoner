@@ -1,0 +1,78 @@
+.root {
+  display: grid;
+  grid-template-columns: calc(100vw * var(--left-ratio)) 1fr;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.root.swapped {
+  grid-template-columns: 1fr calc(100vw * var(--left-ratio));
+}
+
+.panel {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  height: 100vh;
+}
+
+.panelBook {
+  background: var(--color-book-bg);
+  color: var(--color-book-fg);
+}
+
+.panelPrisoner {
+  background: var(--color-prisoner-bg);
+  color: var(--color-prisoner-fg);
+}
+
+.splitLine {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: calc(100vw * var(--left-ratio));
+  width: var(--split-line-width);
+  background: var(--color-muted);
+  pointer-events: none;
+  z-index: 90;
+  transform: translateX(-0.5px);
+}
+
+.handle {
+  position: fixed;
+  left: calc(100vw * var(--left-ratio));
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: none;
+  cursor: col-resize;
+  z-index: 100;
+  transition:
+    width 0.15s ease,
+    height 0.15s ease;
+  padding: 0;
+}
+
+.handle::before {
+  content: "";
+  position: absolute;
+  inset: 40%;
+  border-radius: 50%;
+  background: var(--color-book-bg);
+}
+
+.handle:hover,
+.handle.dragging {
+  width: 64px;
+  height: 64px;
+}
+
+.handle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}

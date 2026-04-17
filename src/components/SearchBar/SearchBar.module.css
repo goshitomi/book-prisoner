@@ -1,0 +1,52 @@
+.form {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  max-width: 420px;
+}
+
+.input {
+  flex: 1;
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+  padding: 8px 12px;
+  font-family: var(--font-ko);
+  font-size: 13px;
+  letter-spacing: 0;
+  min-width: 0;
+}
+
+.input::placeholder {
+  color: currentColor;
+  opacity: 0.5;
+}
+
+.input:focus {
+  outline: 1px solid currentColor;
+  outline-offset: 1px;
+}
+
+.submit {
+  background: transparent;
+  border: 1px solid currentColor;
+  border-left: none;
+  color: inherit;
+  padding: 8px 14px;
+  font-family: var(--font-ko);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.submit:hover {
+  background: currentColor;
+}
+.submit:hover span {
+  color: var(--color-prisoner-bg);
+}
+
+:global(.headerSwapped) .submit:hover span {
+  color: var(--color-book-bg);
+}

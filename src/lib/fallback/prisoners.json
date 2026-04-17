@@ -1,0 +1,622 @@
+[
+  {
+    "book": {
+      "isbn13": "9788936434120",
+      "title": "토지",
+      "authors": "박경리",
+      "publisher": "마로니에북스",
+      "publicationYear": "2012",
+      "callNo": "813.6 ㅂ778ㅌ",
+      "registrationDate": "1994-03-21",
+      "form": "22cm",
+      "pages": 648,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "813.6ㅂ778ㅌ",
+      "name": "토지",
+      "coConspirators": "박경리",
+      "birthInstitution": "마로니에북스",
+      "birthYear": "2012",
+      "residentId": "978893-6434120",
+      "height": "22cm",
+      "sentence": "648년",
+      "nationality": "서울",
+      "incarcerationDate": "1994-03-21",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788936433598",
+      "title": "소년이 온다",
+      "authors": "한강",
+      "publisher": "창비",
+      "publicationYear": "2014",
+      "callNo": "813.6 ㅎ155ㅅ",
+      "registrationDate": "2014-05-19",
+      "form": "20cm",
+      "pages": 216,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "813.6ㅎ155ㅅ",
+      "name": "소년이 온다",
+      "coConspirators": "한강",
+      "birthInstitution": "창비",
+      "birthYear": "2014",
+      "residentId": "978893-6433598",
+      "height": "20cm",
+      "sentence": "216년",
+      "nationality": "서울",
+      "incarcerationDate": "2014-05-19",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788937460432",
+      "title": "데미안",
+      "authors": "헤르만 헤세",
+      "publisher": "민음사",
+      "publicationYear": "2000",
+      "callNo": "833.914 ㅎ528ㄷ",
+      "registrationDate": "2000-09-01",
+      "form": "22cm",
+      "pages": 235,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "833.914ㅎ528ㄷ",
+      "name": "데미안",
+      "coConspirators": "헤르만 헤세",
+      "birthInstitution": "민음사",
+      "birthYear": "2000",
+      "residentId": "978893-7460432",
+      "height": "22cm",
+      "sentence": "235년",
+      "nationality": "서울",
+      "incarcerationDate": "2000-09-01",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788937462788",
+      "title": "1984",
+      "authors": "조지 오웰",
+      "publisher": "민음사",
+      "publicationYear": "2003",
+      "callNo": "823.914 ㅇ129ㅇ",
+      "registrationDate": "2003-06-01",
+      "form": "22cm",
+      "pages": 447,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "823.914ㅇ129ㅇ",
+      "name": "1984",
+      "coConspirators": "조지 오웰",
+      "birthInstitution": "민음사",
+      "birthYear": "2003",
+      "residentId": "978893-7462788",
+      "height": "22cm",
+      "sentence": "447년",
+      "nationality": "서울",
+      "incarcerationDate": "2003-06-01",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788954651288",
+      "title": "채식주의자",
+      "authors": "한강",
+      "publisher": "문학동네",
+      "publicationYear": "2007",
+      "callNo": "813.6 ㅎ155ㅊ",
+      "registrationDate": "2007-10-30",
+      "form": "22cm",
+      "pages": 247,
+      "publishPlace": "파주",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "813.6ㅎ155ㅊ",
+      "name": "채식주의자",
+      "coConspirators": "한강",
+      "birthInstitution": "문학동네",
+      "birthYear": "2007",
+      "residentId": "978895-4651288",
+      "height": "22cm",
+      "sentence": "247년",
+      "nationality": "파주",
+      "incarcerationDate": "2007-10-30",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788932917245",
+      "title": "82년생 김지영",
+      "authors": "조남주",
+      "publisher": "민음사",
+      "publicationYear": "2016",
+      "callNo": "813.7 ㅈ888ㄱ",
+      "registrationDate": "2016-10-14",
+      "form": "20cm",
+      "pages": 192,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "813.7ㅈ888ㄱ",
+      "name": "82년생 김지영",
+      "coConspirators": "조남주",
+      "birthInstitution": "민음사",
+      "birthYear": "2016",
+      "residentId": "978893-2917245",
+      "height": "20cm",
+      "sentence": "192년",
+      "nationality": "서울",
+      "incarcerationDate": "2016-10-14",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788954620147",
+      "title": "무진기행",
+      "authors": "김승옥",
+      "publisher": "문학동네",
+      "publicationYear": "1995",
+      "callNo": "813.6 ㄱ781ㅁ",
+      "registrationDate": "1995-11-22",
+      "form": "21cm",
+      "pages": 318,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "813.6ㄱ781ㅁ",
+      "name": "무진기행",
+      "coConspirators": "김승옥",
+      "birthInstitution": "문학동네",
+      "birthYear": "1995",
+      "residentId": "978895-4620147",
+      "height": "21cm",
+      "sentence": "318년",
+      "nationality": "서울",
+      "incarcerationDate": "1995-11-22",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788937834790",
+      "title": "노인과 바다",
+      "authors": "어니스트 헤밍웨이",
+      "publisher": "민음사",
+      "publicationYear": "2012",
+      "callNo": "823.912 ㅎ327ㄴ",
+      "registrationDate": "2012-01-11",
+      "form": "22cm",
+      "pages": 147,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "823.912ㅎ327ㄴ",
+      "name": "노인과 바다",
+      "coConspirators": "어니스트 헤밍웨이",
+      "birthInstitution": "민음사",
+      "birthYear": "2012",
+      "residentId": "978893-7834790",
+      "height": "22cm",
+      "sentence": "147년",
+      "nationality": "서울",
+      "incarcerationDate": "2012-01-11",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788937460784",
+      "title": "변신",
+      "authors": "프란츠 카프카",
+      "publisher": "민음사",
+      "publicationYear": "1998",
+      "callNo": "833.912 ㅋ152ㅂ",
+      "registrationDate": "1998-04-09",
+      "form": "22cm",
+      "pages": 336,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "833.912ㅋ152ㅂ",
+      "name": "변신",
+      "coConspirators": "프란츠 카프카",
+      "birthInstitution": "민음사",
+      "birthYear": "1998",
+      "residentId": "978893-7460784",
+      "height": "22cm",
+      "sentence": "336년",
+      "nationality": "서울",
+      "incarcerationDate": "1998-04-09",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788937460050",
+      "title": "이방인",
+      "authors": "알베르 카뮈",
+      "publisher": "민음사",
+      "publicationYear": "1997",
+      "callNo": "863.914 ㅋ147ㅇ",
+      "registrationDate": "1997-07-30",
+      "form": "22cm",
+      "pages": 168,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "863.914ㅋ147ㅇ",
+      "name": "이방인",
+      "coConspirators": "알베르 카뮈",
+      "birthInstitution": "민음사",
+      "birthYear": "1997",
+      "residentId": "978893-7460050",
+      "height": "22cm",
+      "sentence": "168년",
+      "nationality": "서울",
+      "incarcerationDate": "1997-07-30",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788932907369",
+      "title": "죄와 벌",
+      "authors": "표도르 도스토옙스키",
+      "publisher": "민음사",
+      "publicationYear": "2012",
+      "callNo": "891.73 ㄷ736ㅈ",
+      "registrationDate": "2012-06-15",
+      "form": "22cm",
+      "pages": 920,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "891.73ㄷ736ㅈ",
+      "name": "죄와 벌",
+      "coConspirators": "표도르 도스토옙스키",
+      "birthInstitution": "민음사",
+      "birthYear": "2012",
+      "residentId": "978893-2907369",
+      "height": "22cm",
+      "sentence": "920년",
+      "nationality": "서울",
+      "incarcerationDate": "2012-06-15",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788954670241",
+      "title": "파친코",
+      "authors": "이민진",
+      "publisher": "문학사상",
+      "publicationYear": "2018",
+      "callNo": "813.54 ㅇ566ㅍ",
+      "registrationDate": "2018-03-19",
+      "form": "22cm",
+      "pages": 528,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "813.54ㅇ566ㅍ",
+      "name": "파친코",
+      "coConspirators": "이민진",
+      "birthInstitution": "문학사상",
+      "birthYear": "2018",
+      "residentId": "978895-4670241",
+      "height": "22cm",
+      "sentence": "528년",
+      "nationality": "서울",
+      "incarcerationDate": "2018-03-19",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788937473968",
+      "title": "호밀밭의 파수꾼",
+      "authors": "제롬 데이비드 샐린저",
+      "publisher": "민음사",
+      "publicationYear": "2001",
+      "callNo": "823.914 ㅅ128ㅎ",
+      "registrationDate": "2001-05-25",
+      "form": "22cm",
+      "pages": 332,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "823.914ㅅ128ㅎ",
+      "name": "호밀밭의 파수꾼",
+      "coConspirators": "제롬 데이비드 샐린저",
+      "birthInstitution": "민음사",
+      "birthYear": "2001",
+      "residentId": "978893-7473968",
+      "height": "22cm",
+      "sentence": "332년",
+      "nationality": "서울",
+      "incarcerationDate": "2001-05-25",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788937461132",
+      "title": "그리스인 조르바",
+      "authors": "니코스 카잔차키스",
+      "publisher": "민음사",
+      "publicationYear": "2000",
+      "callNo": "889.3 ㅋ186ㄱ",
+      "registrationDate": "2000-12-05",
+      "form": "22cm",
+      "pages": 472,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "889.3ㅋ186ㄱ",
+      "name": "그리스인 조르바",
+      "coConspirators": "니코스 카잔차키스",
+      "birthInstitution": "민음사",
+      "birthYear": "2000",
+      "residentId": "978893-7461132",
+      "height": "22cm",
+      "sentence": "472년",
+      "nationality": "서울",
+      "incarcerationDate": "2000-12-05",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788932917481",
+      "title": "칼의 노래",
+      "authors": "김훈",
+      "publisher": "문학동네",
+      "publicationYear": "2012",
+      "callNo": "813.6 ㄱ758ㅋ",
+      "registrationDate": "2012-04-18",
+      "form": "22cm",
+      "pages": 396,
+      "publishPlace": "파주",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "813.6ㄱ758ㅋ",
+      "name": "칼의 노래",
+      "coConspirators": "김훈",
+      "birthInstitution": "문학동네",
+      "birthYear": "2012",
+      "residentId": "978893-2917481",
+      "height": "22cm",
+      "sentence": "396년",
+      "nationality": "파주",
+      "incarcerationDate": "2012-04-18",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788954616010",
+      "title": "엄마를 부탁해",
+      "authors": "신경숙",
+      "publisher": "창비",
+      "publicationYear": "2008",
+      "callNo": "813.6 ㅅ731ㅇ",
+      "registrationDate": "2008-11-08",
+      "form": "22cm",
+      "pages": 298,
+      "publishPlace": "파주",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "813.6ㅅ731ㅇ",
+      "name": "엄마를 부탁해",
+      "coConspirators": "신경숙",
+      "birthInstitution": "창비",
+      "birthYear": "2008",
+      "residentId": "978895-4616010",
+      "height": "22cm",
+      "sentence": "298년",
+      "nationality": "파주",
+      "incarcerationDate": "2008-11-08",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788937460234",
+      "title": "이상한 나라의 앨리스",
+      "authors": "루이스 캐럴",
+      "publisher": "민음사",
+      "publicationYear": "1995",
+      "callNo": "823.91 ㅋ148ㅇ",
+      "registrationDate": "1995-08-12",
+      "form": "22cm",
+      "pages": 244,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "823.91ㅋ148ㅇ",
+      "name": "이상한 나라의 앨리스",
+      "coConspirators": "루이스 캐럴",
+      "birthInstitution": "민음사",
+      "birthYear": "1995",
+      "residentId": "978893-7460234",
+      "height": "22cm",
+      "sentence": "244년",
+      "nationality": "서울",
+      "incarcerationDate": "1995-08-12",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788934976851",
+      "title": "살인자의 기억법",
+      "authors": "김영하",
+      "publisher": "문학동네",
+      "publicationYear": "2013",
+      "callNo": "813.6 ㄱ716ㅅ",
+      "registrationDate": "2013-07-24",
+      "form": "20cm",
+      "pages": 172,
+      "publishPlace": "파주",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "813.6ㄱ716ㅅ",
+      "name": "살인자의 기억법",
+      "coConspirators": "김영하",
+      "birthInstitution": "문학동네",
+      "birthYear": "2013",
+      "residentId": "978893-4976851",
+      "height": "20cm",
+      "sentence": "172년",
+      "nationality": "파주",
+      "incarcerationDate": "2013-07-24",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788954609692",
+      "title": "나는 나로 살기로 했다",
+      "authors": "김수현",
+      "publisher": "마음의숲",
+      "publicationYear": "2016",
+      "callNo": "199.1 ㄱ728ㄴ",
+      "registrationDate": "2016-11-01",
+      "form": "21cm",
+      "pages": 288,
+      "publishPlace": "서울",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "199.1ㄱ728ㄴ",
+      "name": "나는 나로 살기로 했다",
+      "coConspirators": "김수현",
+      "birthInstitution": "마음의숲",
+      "birthYear": "2016",
+      "residentId": "978895-4609692",
+      "height": "21cm",
+      "sentence": "288년",
+      "nationality": "서울",
+      "incarcerationDate": "2016-11-01",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  },
+  {
+    "book": {
+      "isbn13": "9788936434953",
+      "title": "아몬드",
+      "authors": "손원평",
+      "publisher": "창비",
+      "publicationYear": "2017",
+      "callNo": "813.7 ㅅ743ㅇ",
+      "registrationDate": "2017-03-31",
+      "form": "21cm",
+      "pages": 264,
+      "publishPlace": "파주",
+      "language": "kor",
+      "imageUrl": null,
+      "source": "NL"
+    },
+    "prisoner": {
+      "inmateNumber": "813.7ㅅ743ㅇ",
+      "name": "아몬드",
+      "coConspirators": "손원평",
+      "birthInstitution": "창비",
+      "birthYear": "2017",
+      "residentId": "978893-6434953",
+      "height": "21cm",
+      "sentence": "264년",
+      "nationality": "파주",
+      "incarcerationDate": "2017-03-31",
+      "spokenLanguage": "한국어",
+      "mugshot": null
+    }
+  }
+]
