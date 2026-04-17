@@ -18,7 +18,7 @@
 
 .splitLine {
   position: fixed;
-  top: 0;
+  top: 56px;
   bottom: 0;
   left: calc(100vw * var(--left-ratio));
   width: var(--split-line-width);
@@ -30,10 +30,10 @@
 
 .handle {
   position: fixed;
-  top: 0;
+  top: 56px;
   left: calc(100vw * var(--left-ratio));
   width: 12px;
-  height: 100vh;
+  height: calc(100vh - 56px);
   transform: translateX(-50%);
   background: transparent;
   border: none;

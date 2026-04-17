@@ -51,6 +51,13 @@ const NLResponseSchema = z
   })
   .passthrough();
 
+const NLErrorSchema = z
+  .object({
+    errorCode: z.string(),
+    errorMsg: z.string().optional(),
+  })
+  .passthrough();
+
 export interface NLSearchParams {
   query?: string;
   isbn?: string;
@@ -80,10 +87,15 @@ async function request(params: URLSearchParams): Promise<{ total: number; items:
     json = JSON.parse(text.replace(/^\uFEFF/, ""));
   }
 
+  const errorParsed = NLErrorSchema.safeParse(json);
+  if (errorParsed.success) {
+    throw new Error(`NL API error ${errorParsed.data.errorCode}: ${errorParsed.data.errorMsg ?? ""}`);
+  }
+
   const parsed = NLResponseSchema.safeParse(json);
   if (!parsed.success) {
     console.error("[nl] schema mismatch", parsed.error.issues.slice(0, 3));
-    return { total: 0, items: [] };
+    throw new Error("NL API schema mismatch");
   }
 
   const items = parsed.data.result.map((item) => ({
@@ -119,16 +131,32 @@ export async function searchNL(params: NLSearchParams) {
   return request(qs);
 }
 
-// 기본 랜딩 / 결과 없음 폴백용. 국중 API에 명시적 '신착'은 없으므로
-// 광범위한 조회(category=도서)로 최신을 받아온다.
+// NL API는 kwd 필수 + sort 파라미터 무시됨. 결과 과다 샘플링 후 제목 dedup 및 regDate DESC 정렬.
+// "대한민국"은 35/50 고유 제목, ISBN 19/50 — 가장 균형 잡힌 랜딩 키워드.
+const LANDING_KEYWORD = "대한민국";
+
 export async function fetchNLNewBooks(pageSize = 20): Promise<NLRawItem[]> {
   const qs = new URLSearchParams();
   qs.set("systemType", "오프라인자료");
-  qs.set("category", "도서");
+  qs.set("kwd", LANDING_KEYWORD);
   qs.set("pageNum", "1");
-  qs.set("pageSize", String(pageSize));
-  qs.set("sort", "reg_date");
-  qs.set("order", "desc");
+  qs.set("pageSize", String(pageSize * 5));
   const { items } = await request(qs);
-  return items;
+
+  const seen = new Set<string>();
+  const unique: NLRawItem[] = [];
+  for (const item of items) {
+    const key = item.title_info.trim();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    unique.push(item);
+  }
+
+  unique.sort((a, b) => {
+    const da = (a.reg_date || "").replace(/\D/g, "");
+    const db = (b.reg_date || "").replace(/\D/g, "");
+    return db.localeCompare(da);
+  });
+
+  return unique.slice(0, pageSize);
 }
