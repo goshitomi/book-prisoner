@@ -1,52 +1,28 @@
 .form {
   display: flex;
-  align-items: center;
-  gap: 0;
   flex: 1;
-  max-width: 420px;
+  max-width: 360px;
+  margin: 0 auto;
 }
 
 .input {
-  flex: 1;
+  width: 100%;
   background: transparent;
-  color: inherit;
-  border: 1px solid currentColor;
-  padding: 8px 12px;
-  font-family: var(--font-ko);
-  font-size: 13px;
+  color: #000000;
+  border: 1px solid #000000;
+  padding: 6px 10px;
+  font-family: var(--font-en);
+  font-size: 12px;
   letter-spacing: 0;
   min-width: 0;
 }
 
 .input::placeholder {
-  color: currentColor;
-  opacity: 0.5;
+  color: #000000;
+  opacity: 0.4;
 }
 
 .input:focus {
-  outline: 1px solid currentColor;
+  outline: 1px solid #000000;
   outline-offset: 1px;
-}
-
-.submit {
-  background: transparent;
-  border: 1px solid currentColor;
-  border-left: none;
-  color: inherit;
-  padding: 8px 14px;
-  font-family: var(--font-ko);
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  white-space: nowrap;
-}
-
-.submit:hover {
-  background: currentColor;
-}
-.submit:hover span {
-  color: var(--color-prisoner-bg);
-}
-
-:global(.headerSwapped) .submit:hover span {
-  color: var(--color-book-bg);
 }

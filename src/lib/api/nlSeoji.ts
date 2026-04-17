@@ -3,6 +3,7 @@ import { kvGet, kvSet } from "../cache/kv";
 import { CACHE_TTL } from "../constants";
 
 const SEOJI_BASE = "https://www.nl.go.kr/seoji/SearchApi.do";
+const CONCURRENCY = 5;
 
 async function fetchSingleSeoji(isbn: string): Promise<Partial<NLSeojiRawItem> | null> {
   const cacheKey = `seoji:${isbn}`;
@@ -19,7 +20,7 @@ async function fetchSingleSeoji(isbn: string): Promise<Partial<NLSeojiRawItem> |
   try {
     const res = await fetch(url.toString(), {
       next: { revalidate: CACHE_TTL.BOOK_DETAIL },
-      signal: AbortSignal.timeout(4000),
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return null;
     const json = (await res.json()) as { docs?: Array<Partial<NLSeojiRawItem>> };
@@ -31,14 +32,37 @@ async function fetchSingleSeoji(isbn: string): Promise<Partial<NLSeojiRawItem> |
   }
 }
 
+async function runWithLimit<T>(
+  items: string[],
+  worker: (item: string) => Promise<T | null>,
+  limit: number,
+): Promise<(T | null)[]> {
+  const results: (T | null)[] = new Array(items.length).fill(null);
+  let next = 0;
+  const run = async () => {
+    while (next < items.length) {
+      const i = next++;
+      try {
+        results[i] = await worker(items[i]);
+      } catch {
+        results[i] = null;
+      }
+    }
+  };
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, () => run()),
+  );
+  return results;
+}
+
 export async function fetchSeojiBatch(
   isbns: string[],
 ): Promise<Record<string, Partial<NLSeojiRawItem>>> {
   const unique = Array.from(new Set(isbns.filter(Boolean)));
-  const results = await Promise.allSettled(unique.map((isbn) => fetchSingleSeoji(isbn)));
+  const results = await runWithLimit(unique, fetchSingleSeoji, CONCURRENCY);
   const map: Record<string, Partial<NLSeojiRawItem>> = {};
   results.forEach((r, i) => {
-    if (r.status === "fulfilled" && r.value) map[unique[i]] = r.value;
+    if (r) map[unique[i]] = r;
   });
   return map;
 }

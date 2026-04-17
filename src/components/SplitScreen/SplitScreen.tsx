@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import type { ReactNode } from "react";
 import styles from "./SplitScreen.module.css";
 import { useSplitRatio } from "./useSplitRatio";
@@ -9,7 +9,6 @@ import { useSyncScroll } from "@/components/SyncScroll/useSyncScroll";
 interface Props {
   left: ReactNode;
   right: ReactNode;
-  swapped: boolean;
   leftLabel?: string;
   rightLabel?: string;
 }
@@ -21,7 +20,7 @@ export interface SplitScreenHandle {
 }
 
 export const SplitScreen = forwardRef<SplitScreenHandle, Props>(function SplitScreen(
-  { left, right, swapped, leftLabel = "도서 명부", rightLabel = "수감자 명부" },
+  { left, right, leftLabel = "도서 명부", rightLabel = "수감자 명부" },
   ref,
 ) {
   const { ratio, setRatio, dragging, handleRef } = useSplitRatio();
@@ -39,15 +38,6 @@ export const SplitScreen = forwardRef<SplitScreenHandle, Props>(function SplitSc
     resumeSync: sync.resume,
   }));
 
-  // 스왑 직후 스크롤 리셋
-  useEffect(() => {
-    if (leftRef.current) leftRef.current.scrollTop = 0;
-    if (rightRef.current) rightRef.current.scrollTop = 0;
-    sync.reset();
-    // sync 메서드는 항상 동일 참조
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [swapped]);
-
   const onHandleKey = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     const step = e.shiftKey ? 0.1 : 0.05;
     if (e.key === "ArrowLeft") {
@@ -59,31 +49,24 @@ export const SplitScreen = forwardRef<SplitScreenHandle, Props>(function SplitSc
     }
   };
 
-  const bookPanel = (
-    <section
-      ref={leftRef as React.RefObject<HTMLElement>}
-      className={`${styles.panel} ${styles.panelBook}`}
-      aria-label={leftLabel}
-      data-panel="book"
-    >
-      {left}
-    </section>
-  );
-  const prisonerPanel = (
-    <section
-      ref={rightRef as React.RefObject<HTMLElement>}
-      className={`${styles.panel} ${styles.panelPrisoner}`}
-      aria-label={rightLabel}
-      data-panel="prisoner"
-    >
-      {right}
-    </section>
-  );
-
   return (
-    <div className={`${styles.root} ${swapped ? styles.swapped : ""}`}>
-      {swapped ? prisonerPanel : bookPanel}
-      {swapped ? bookPanel : prisonerPanel}
+    <div className={styles.root}>
+      <section
+        ref={leftRef as React.RefObject<HTMLElement>}
+        className={styles.panel}
+        aria-label={leftLabel}
+        data-panel="left"
+      >
+        {left}
+      </section>
+      <section
+        ref={rightRef as React.RefObject<HTMLElement>}
+        className={styles.panel}
+        aria-label={rightLabel}
+        data-panel="right"
+      >
+        {right}
+      </section>
       <div className={styles.splitLine} aria-hidden="true" />
       <button
         type="button"

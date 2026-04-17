@@ -2,12 +2,11 @@
 
 import { RefObject, useEffect, useRef } from "react";
 
-// 퍼센트 기반 + 마지막 소스 추적 방식. 핑퐁 방지.
 export function useSyncScroll(
   leftRef: RefObject<HTMLElement>,
   rightRef: RefObject<HTMLElement>,
 ) {
-  const lastSource = useRef<"left" | "right" | null>(null);
+  const isProgrammatic = useRef<"left" | "right" | null>(null);
   const suspended = useRef(false);
 
   useEffect(() => {
@@ -17,25 +16,23 @@ export function useSyncScroll(
 
     const syncFrom = (src: "left" | "right") => {
       if (suspended.current) return;
-      if (lastSource.current && lastSource.current !== src) return;
-      lastSource.current = src;
       const from = src === "left" ? L : R;
       const to = src === "left" ? R : L;
       const fromMax = from.scrollHeight - from.clientHeight;
       const toMax = to.scrollHeight - to.clientHeight;
-      if (fromMax <= 0 || toMax <= 0) {
-        lastSource.current = null;
-        return;
-      }
+      if (fromMax <= 0 || toMax <= 0) return;
       const pct = from.scrollTop / fromMax;
+      const dest: "left" | "right" = src === "left" ? "right" : "left";
+      isProgrammatic.current = dest;
       to.scrollTop = pct * toMax;
       requestAnimationFrame(() => {
-        lastSource.current = null;
+        if (isProgrammatic.current === dest) isProgrammatic.current = null;
       });
     };
 
-    const onLeft = () => syncFrom("left");
-    const onRight = () => syncFrom("right");
+    const onLeft = () => { if (isProgrammatic.current !== "left") syncFrom("left"); };
+    const onRight = () => { if (isProgrammatic.current !== "right") syncFrom("right"); };
+
     L.addEventListener("scroll", onLeft, { passive: true });
     R.addEventListener("scroll", onRight, { passive: true });
     return () => {
@@ -45,14 +42,8 @@ export function useSyncScroll(
   }, [leftRef, rightRef]);
 
   return {
-    suspend: () => {
-      suspended.current = true;
-    },
-    resume: () => {
-      suspended.current = false;
-    },
-    reset: () => {
-      lastSource.current = null;
-    },
+    suspend: () => { suspended.current = true; },
+    resume: () => { suspended.current = false; },
+    reset: () => { isProgrammatic.current = null; },
   };
 }

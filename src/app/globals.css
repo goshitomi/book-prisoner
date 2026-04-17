@@ -1,17 +1,17 @@
 :root {
   --color-book-bg: #ffffff;
   --color-book-fg: #000000;
-  --color-prisoner-bg: #000000;
-  --color-prisoner-fg: #ffffff;
+  --color-prisoner-bg: #ffffff;
+  --color-prisoner-fg: #000000;
+  --color-ink: #000000;
   --color-accent: #ff2e2e;
   --color-muted: #8a8a8a;
 
   --left-ratio: 0.5;
-  --split-line-width: 1px;
-  --cursor-size: 12px;
+  --split-line-width: 3px;
 
   --font-ko: "Noto Sans KR", "Noto Sans CJK KR", system-ui, -apple-system, sans-serif;
-  --font-en: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-en: "Univers Next Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 * {
@@ -29,25 +29,11 @@ body {
 body {
   font-family: var(--font-ko), var(--font-en);
   font-weight: 500;
-  font-size: 15px;
+  font-size: 12px;
   line-height: 1.5;
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-html.cursorHidden,
-html.cursorHidden * {
-  cursor: none;
-}
-
-button,
-a,
-input,
-[role="separator"],
-.allowSystemCursor,
-.allowSystemCursor * {
-  cursor: auto !important;
 }
 
 input,
@@ -67,7 +53,6 @@ a {
   font-family: var(--font-en);
 }
 
-/* 포커스 링: :focus-visible 전용 */
 :focus {
   outline: none;
 }
@@ -77,18 +62,18 @@ a {
   outline-offset: 2px;
 }
 
-/* Skip link */
 .skipLink {
   position: fixed;
   top: 8px;
   left: 8px;
   padding: 8px 12px;
-  background: var(--color-book-bg);
-  color: var(--color-book-fg);
-  border: 1px solid currentColor;
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
   z-index: 10000;
   transform: translateY(-200%);
   transition: transform 0.12s;
+  font-size: 12px;
 }
 
 .skipLink:focus {
@@ -104,14 +89,13 @@ a {
   }
 }
 
-/* 스크롤바 톤 통일 */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-muted);
-  border-radius: 4px;
+  background: #ccc;
+  border-radius: 3px;
 }

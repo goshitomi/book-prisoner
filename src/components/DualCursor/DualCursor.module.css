@@ -1,16 +1,16 @@
-.cursor {
+.ghost {
   position: fixed;
   top: 0;
   left: 0;
-  width: var(--cursor-size);
-  height: var(--cursor-size);
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
+  border: 1px solid var(--color-ink);
+  background: transparent;
   pointer-events: none;
   z-index: 9999;
-  margin: calc(var(--cursor-size) * -0.5) 0 0 calc(var(--cursor-size) * -0.5);
-  will-change: transform;
+  margin: -7px 0 0 -7px;
+  will-change: transform, opacity;
   opacity: 0;
   transition: opacity 0.08s;
-  mix-blend-mode: difference;
-  background: #fff;
 }

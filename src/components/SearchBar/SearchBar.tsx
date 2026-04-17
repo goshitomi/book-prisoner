@@ -14,7 +14,6 @@ export function SearchBar() {
     setValue(params.get("q") ?? "");
   }, [params]);
 
-  // "/" 단축키 포커스
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "/" && document.activeElement?.tagName !== "INPUT") {
@@ -44,14 +43,11 @@ export function SearchBar() {
         type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="수감자 성명 또는 주민등록번호(ISBN)"
-        aria-label="수감자 검색"
+        placeholder="Search"
+        aria-label="도서 검색"
         spellCheck={false}
         autoComplete="off"
       />
-      <button type="submit" className={styles.submit}>
-        <span>조회</span>
-      </button>
     </form>
   );
 }

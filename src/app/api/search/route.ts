@@ -4,10 +4,10 @@ import { fetchSeojiBatch } from "@/lib/api/nlSeoji";
 import { fetchBookEnrichment } from "@/lib/api/data4library";
 import { kvGet, kvSet } from "@/lib/cache/kv";
 import { mapBookToPrisoner, normalizeBook } from "@/lib/mapBookToPrisoner";
-import { isIsbnLike, sanitizeIsbn } from "@/lib/utils/isbn";
+import { extractIsbn13, isIsbnLike } from "@/lib/utils/isbn";
 import fallbackData from "@/lib/fallback/prisoners.json";
 import { CACHE_TTL, MAX_PAGES, PAGE_SIZE } from "@/lib/constants";
-import type { BookPrisonerPair, FallbackReason, SearchResponse } from "@/lib/types";
+import type { BookPrisonerPair, FallbackReason, NLRawItem, SearchResponse } from "@/lib/types";
 
 export const runtime = "nodejs";
 
@@ -17,24 +17,39 @@ function cleanQuery(raw: string | null): string | null {
   return trimmed || null;
 }
 
+function dedupByIsbn(items: NLRawItem[]): NLRawItem[] {
+  const seen = new Set<string>();
+  const out: NLRawItem[] = [];
+  for (const item of items) {
+    const isbn = extractIsbn13(item.isbn);
+    const key = isbn || `${item.title_info}::${item.author_info}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+  }
+  return out;
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const query = cleanQuery(searchParams.get("q"));
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10) || 1);
 
-  const cacheKey = query ? `search:${query}:${page}` : `newbooks:${page}`;
+  const cacheKey = query
+    ? `v2:search:${encodeURIComponent(query)}:${page}`
+    : `v2:newbooks:${page}`;
 
   const cached = await kvGet<SearchResponse>(cacheKey);
   if (cached) return NextResponse.json(cached);
 
   try {
-    let skeleton;
+    let skeleton: NLRawItem[];
     let total = 0;
     let isFallback = false;
     let fallbackReason: FallbackReason = null;
 
     if (query) {
-      const isbn = isIsbnLike(query) ? sanitizeIsbn(query) : undefined;
+      const isbn = isIsbnLike(query) ? extractIsbn13(query) : undefined;
       const result = await searchNL({
         query: isbn ? undefined : query,
         isbn,
@@ -55,9 +70,10 @@ export async function GET(req: NextRequest) {
       total = skeleton.length;
     }
 
-    // ISBN 화이트리스트 (국중 결과 기준)
+    skeleton = dedupByIsbn(skeleton);
+
     const isbns = skeleton
-      .map((b) => sanitizeIsbn(b.isbn))
+      .map((b) => extractIsbn13(b.isbn))
       .filter((i): i is string => !!i && i.length === 13);
 
     const [seojiMap, enrichmentMap] = await Promise.all([
@@ -66,7 +82,7 @@ export async function GET(req: NextRequest) {
     ]);
 
     const pairs: BookPrisonerPair[] = skeleton.map((raw) => {
-      const isbn = sanitizeIsbn(raw.isbn);
+      const isbn = extractIsbn13(raw.isbn);
       const seoji = seojiMap[isbn] ?? {};
       const enrichment = enrichmentMap[isbn] ?? {};
       const book = normalizeBook(

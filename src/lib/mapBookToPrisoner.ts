@@ -1,6 +1,6 @@
 import type { Book, Prisoner, NLRawItem, NLSeojiRawItem } from "./types";
 import { LANG_MAP } from "./constants";
-import { formatResidentId, sanitizeIsbn } from "./utils/isbn";
+import { extractIsbn13, formatResidentId } from "./utils/isbn";
 
 export function normalizeBook(
   nl: NLRawItem,
@@ -9,7 +9,7 @@ export function normalizeBook(
   registrationDate: string | null = null,
 ): Book {
   const rawIsbn = nl.isbn || seoji.EA_ISBN || "";
-  const isbn13 = sanitizeIsbn(rawIsbn);
+  const isbn13 = extractIsbn13(rawIsbn);
 
   return {
     isbn13,
@@ -18,7 +18,7 @@ export function normalizeBook(
     publisher: (nl.pub_info || seoji.PUBLISHER || "").trim(),
     publicationYear: extractYear(nl.pub_year_info || seoji.PUBLISH_PREDATE),
     callNo: nl.call_no?.trim() || null,
-    registrationDate: registrationDate || formatRegDate(nl.reg_date) || null,
+    registrationDate: formatRegDate(nl.reg_date) || registrationDate || null,
     form: parseForm(seoji.BOOK_SIZE ?? null),
     pages: parsePages(seoji.PAGE ?? null),
     publishPlace: null,

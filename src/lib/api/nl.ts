@@ -130,13 +130,5 @@ export async function fetchNLNewBooks(pageSize = 20): Promise<NLRawItem[]> {
   qs.set("sort", "reg_date");
   qs.set("order", "desc");
   const { items } = await request(qs);
-  if (items.length > 0) return items;
-  // 정렬이 무시되는 경우를 대비한 2차 시도
-  const fallbackQs = new URLSearchParams();
-  fallbackQs.set("systemType", "오프라인자료");
-  fallbackQs.set("kwd", "책");
-  fallbackQs.set("pageNum", "1");
-  fallbackQs.set("pageSize", String(pageSize));
-  const { items: fallbackItems } = await request(fallbackQs);
-  return fallbackItems;
+  return items;
 }

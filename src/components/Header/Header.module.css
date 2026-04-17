@@ -3,76 +3,45 @@
   top: 0;
   left: 0;
   right: 0;
-  display: grid;
-  grid-template-columns: calc(100vw * var(--left-ratio)) 1fr;
-  z-index: 80;
-  height: 64px;
-  pointer-events: none;
-}
-
-.root.swapped {
-  grid-template-columns: 1fr calc(100vw * var(--left-ratio));
-}
-
-.side {
   display: flex;
   align-items: center;
-  padding: 0 24px;
+  justify-content: space-between;
   gap: 16px;
-  pointer-events: auto;
-  border-bottom: 1px solid currentColor;
-  backdrop-filter: blur(12px);
-}
-
-.bookSide {
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--color-book-fg);
-  justify-content: flex-start;
-}
-
-.prisonerSide {
-  background: rgba(0, 0, 0, 0.92);
-  color: var(--color-prisoner-fg);
-  justify-content: flex-end;
+  padding: 0 24px;
+  z-index: 80;
+  height: 56px;
+  background: #ffffff;
+  color: #000000;
+  border-bottom: 1px solid #000000;
 }
 
 .brand {
   font-family: var(--font-en);
-  font-weight: 500;
-  font-size: 16px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
-.brand strong {
-  font-family: var(--font-ko);
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  margin-right: 10px;
-}
-
-.brand .ko {
-  font-size: 15px;
-}
-
-.swapBtn {
+.reverseBtn {
   background: transparent;
-  border: 1px solid currentColor;
-  color: inherit;
-  padding: 6px 12px;
-  font-family: var(--font-ko);
-  font-size: 13px;
-  letter-spacing: 0.1em;
+  border: 1px solid #000000;
+  color: #000000;
+  padding: 6px 14px;
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   white-space: nowrap;
+  cursor: pointer;
 }
 
-.swapBtn:hover {
-  background: currentColor;
+.reverseBtn:hover {
+  background: #000000;
+  color: #ffffff;
 }
-.swapBtn:hover span {
-  color: var(--color-prisoner-bg);
-}
-.prisonerSide .swapBtn:hover span {
-  color: var(--color-book-bg);
+
+.reverseBtn[aria-pressed="true"] {
+  background: #000000;
+  color: #ffffff;
 }

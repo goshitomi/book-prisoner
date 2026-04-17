@@ -60,11 +60,8 @@ export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
   return (
     <>
       <Header swapped={swapped} onToggleSwap={toggleSwap} searchSlot={<SearchBar />} />
-      <SplitScreen
-        swapped={swapped}
-        leftLabel="도서 상세 정보"
-        rightLabel="수감자 상세 정보"
-        left={
+      {(() => {
+        const bookSide = (
           <DetailBookSide
             pair={pair}
             imageHover={imageHover}
@@ -72,8 +69,8 @@ export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
             onImageLeave={() => setImageHover(null)}
             onRequest={onRequest}
           />
-        }
-        right={
+        );
+        const prisonerSide = (
           <DetailPrisonerSide
             pair={pair}
             imageHover={imageHover}
@@ -81,8 +78,16 @@ export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
             onImageLeave={() => setImageHover(null)}
             onRequest={onRequest}
           />
-        }
-      />
+        );
+        return (
+          <SplitScreen
+            leftLabel="도서 상세 정보"
+            rightLabel="수감자 상세 정보"
+            left={swapped ? prisonerSide : bookSide}
+            right={swapped ? bookSide : prisonerSide}
+          />
+        );
+      })()}
       {overlayOpen && (
         <LoanCompleteOverlay pair={pair} swapped={swapped} onClose={onClose} />
       )}

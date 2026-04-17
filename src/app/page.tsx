@@ -3,27 +3,42 @@ import { fetchSeojiBatch } from "@/lib/api/nlSeoji";
 import { fetchBookEnrichment } from "@/lib/api/data4library";
 import { kvGet, kvSet } from "@/lib/cache/kv";
 import { mapBookToPrisoner, normalizeBook } from "@/lib/mapBookToPrisoner";
-import { isIsbnLike, sanitizeIsbn } from "@/lib/utils/isbn";
+import { extractIsbn13, isIsbnLike } from "@/lib/utils/isbn";
 import fallbackData from "@/lib/fallback/prisoners.json";
 import { CACHE_TTL, MAX_PAGES, PAGE_SIZE } from "@/lib/constants";
-import type { BookPrisonerPair, FallbackReason, SearchResponse } from "@/lib/types";
+import type { BookPrisonerPair, FallbackReason, NLRawItem, SearchResponse } from "@/lib/types";
 import { LandingShell } from "./LandingShell";
 
 export const dynamic = "force-dynamic";
 
+function dedupByIsbn(items: NLRawItem[]): NLRawItem[] {
+  const seen = new Set<string>();
+  const out: NLRawItem[] = [];
+  for (const item of items) {
+    const isbn = extractIsbn13(item.isbn);
+    const key = isbn || `${item.title_info}::${item.author_info}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+  }
+  return out;
+}
+
 async function loadSearch(query: string | null, page: number): Promise<SearchResponse> {
-  const cacheKey = query ? `search:${query}:${page}` : `newbooks:${page}`;
+  const cacheKey = query
+    ? `v2:search:${encodeURIComponent(query)}:${page}`
+    : `v2:newbooks:${page}`;
   const cached = await kvGet<SearchResponse>(cacheKey);
   if (cached) return cached;
 
   try {
-    let skeleton;
+    let skeleton: NLRawItem[];
     let total = 0;
     let isFallback = false;
     let fallbackReason: FallbackReason = null;
 
     if (query) {
-      const isbn = isIsbnLike(query) ? sanitizeIsbn(query) : undefined;
+      const isbn = isIsbnLike(query) ? extractIsbn13(query) : undefined;
       const result = await searchNL({
         query: isbn ? undefined : query,
         isbn,
@@ -44,8 +59,10 @@ async function loadSearch(query: string | null, page: number): Promise<SearchRes
       total = skeleton.length;
     }
 
+    skeleton = dedupByIsbn(skeleton);
+
     const isbns = skeleton
-      .map((b) => sanitizeIsbn(b.isbn))
+      .map((b) => extractIsbn13(b.isbn))
       .filter((i): i is string => !!i && i.length === 13);
 
     const [seojiMap, enrichmentMap] = await Promise.all([
@@ -54,13 +71,13 @@ async function loadSearch(query: string | null, page: number): Promise<SearchRes
     ]);
 
     const pairs: BookPrisonerPair[] = skeleton.map((raw) => {
-      const isbn = sanitizeIsbn(raw.isbn);
+      const isbn = extractIsbn13(raw.isbn);
       const seoji = seojiMap[isbn] ?? {};
       const enrichment = enrichmentMap[isbn] ?? {};
       const book = normalizeBook(
         raw,
         seoji,
-        enrichment.bookImageURL ?? null,
+        enrichment.bookImageURL ?? raw.image_url ?? null,
         enrichment.reg_date ?? null,
       );
       const prisoner = mapBookToPrisoner(book);

@@ -8,9 +8,10 @@ interface Props {
   items: BookPrisonerPair[];
   isFallback: boolean;
   fallbackReason: string | null;
+  query?: string | null;
 }
 
-export function PrisonerPanel({ items, isFallback, fallbackReason }: Props) {
+export function PrisonerPanel({ items, isFallback, fallbackReason, query }: Props) {
   const router = useRouter();
   return (
     <div className={styles.root}>
@@ -20,7 +21,9 @@ export function PrisonerPanel({ items, isFallback, fallbackReason }: Props) {
       </h2>
       {isFallback && fallbackReason === "empty_result" && (
         <div className={styles.fallbackBadge} role="status">
-          ※ 수감자 명부에 해당 인물 없음 — 유사 프로필 조회
+          {query
+            ? `※ “${query}” 수감자 없음 — 유사 프로필 조회`
+            : "※ 수감자 명부에 해당 인물 없음 — 유사 프로필 조회"}
         </div>
       )}
       {isFallback && fallbackReason === "api_down" && (

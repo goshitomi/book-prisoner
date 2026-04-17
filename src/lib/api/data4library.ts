@@ -2,6 +2,7 @@ import { kvGet, kvSet } from "../cache/kv";
 import { CACHE_TTL } from "../constants";
 
 const D4L_BASE = "https://data4library.kr/api";
+const CONCURRENCY = 5;
 
 interface D4LBookDetail {
   bookImageURL?: string;
@@ -23,7 +24,7 @@ async function fetchSingleDetail(isbn: string): Promise<D4LBookDetail | null> {
   try {
     const res = await fetch(url.toString(), {
       next: { revalidate: CACHE_TTL.IMAGE },
-      signal: AbortSignal.timeout(4000),
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return null;
     const json = (await res.json()) as {
@@ -39,14 +40,37 @@ async function fetchSingleDetail(isbn: string): Promise<D4LBookDetail | null> {
   }
 }
 
+async function runWithLimit<T>(
+  items: string[],
+  worker: (item: string) => Promise<T | null>,
+  limit: number,
+): Promise<(T | null)[]> {
+  const results: (T | null)[] = new Array(items.length).fill(null);
+  let next = 0;
+  const run = async () => {
+    while (next < items.length) {
+      const i = next++;
+      try {
+        results[i] = await worker(items[i]);
+      } catch {
+        results[i] = null;
+      }
+    }
+  };
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, () => run()),
+  );
+  return results;
+}
+
 export async function fetchBookEnrichment(
   isbns: string[],
 ): Promise<Record<string, D4LBookDetail>> {
   const unique = Array.from(new Set(isbns.filter(Boolean)));
-  const results = await Promise.allSettled(unique.map((isbn) => fetchSingleDetail(isbn)));
+  const results = await runWithLimit(unique, fetchSingleDetail, CONCURRENCY);
   const map: Record<string, D4LBookDetail> = {};
   results.forEach((r, i) => {
-    if (r.status === "fulfilled" && r.value) map[unique[i]] = r.value;
+    if (r) map[unique[i]] = r;
   });
   return map;
 }

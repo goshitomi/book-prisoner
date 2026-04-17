@@ -11,32 +11,21 @@ interface Props {
 }
 
 export function Header({ swapped, onToggleSwap, searchSlot }: Props) {
-  const bookSide = (
-    <div className={`${styles.side} ${styles.bookSide}`}>
+  return (
+    <header className={styles.root} role="banner">
       <Link href="/" className={styles.brand} aria-label="홈으로">
-        <strong className={styles.ko}>책은 죄수다</strong>
-        <span>OVERDUE</span>
+        Book as Prisoner
       </Link>
-    </div>
-  );
-  const prisonerSide = (
-    <div className={`${styles.side} ${styles.prisonerSide}`}>
       {searchSlot}
       <button
         type="button"
-        className={styles.swapBtn}
+        className={styles.reverseBtn}
         onClick={onToggleSwap}
         aria-label="좌우 패널 교체"
         aria-pressed={swapped}
       >
-        <span>書 ↔ 囚</span>
+        Reverse
       </button>
-    </div>
-  );
-  return (
-    <header className={`${styles.root} ${swapped ? styles.swapped : ""}`} role="banner">
-      {swapped ? prisonerSide : bookSide}
-      {swapped ? bookSide : prisonerSide}
     </header>
   );
 }
