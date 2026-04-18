@@ -9,6 +9,7 @@ interface Props {
   onSubmit: () => void;
   placeholder?: string;
   ariaLabel?: string;
+  side: "left" | "right";
 }
 
 export function SearchBar({
@@ -17,6 +18,7 @@ export function SearchBar({
   onSubmit,
   placeholder = "Search",
   ariaLabel = "검색",
+  side,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -26,7 +28,11 @@ export function SearchBar({
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit} role="search">
+    <form
+      className={`${styles.form} ${side === "right" ? styles.formRight : styles.formLeft}`}
+      onSubmit={handleSubmit}
+      role="search"
+    >
       <input
         ref={inputRef}
         className={styles.input}

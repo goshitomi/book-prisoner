@@ -1,5 +1,6 @@
 "use client";
 
+import { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import type { BookPrisonerPair } from "@/lib/types";
 import styles from "./PrisonerPanel.module.css";
@@ -9,9 +10,10 @@ interface Props {
   isFallback: boolean;
   fallbackReason: string | null;
   query?: string | null;
+  footer?: ReactNode;
 }
 
-export function PrisonerPanel({ items, isFallback, fallbackReason, query }: Props) {
+export function PrisonerPanel({ items, isFallback, fallbackReason, query, footer }: Props) {
   const router = useRouter();
   return (
     <div className={styles.root}>
@@ -37,35 +39,62 @@ export function PrisonerPanel({ items, isFallback, fallbackReason, query }: Prop
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>수감번호</th>
-              <th>수감자명</th>
-              <th>공범</th>
-              <th>수감일</th>
+              <th>수감자</th>
+              <th>출생년도</th>
+              <th>ID Number</th>
+              <th>키/몸무게</th>
+              <th>수감일자</th>
+              <th>수인번호</th>
             </tr>
           </thead>
-          <tbody>
-            {items.map(({ book, prisoner }) => (
-              <tr
+          {items.map(({ book, prisoner }) => {
+            const onActivate = () => book.isbn13 && router.push(`/book/${book.isbn13}`);
+            return (
+              <tbody
                 key={book.isbn13 || prisoner.inmateNumber || prisoner.name}
-                onClick={() => book.isbn13 && router.push(`/book/${book.isbn13}`)}
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && book.isbn13) router.push(`/book/${book.isbn13}`);
-                }}
+                className={styles.group}
               >
-                <td className={styles.inmateNumber}>{prisoner.inmateNumber}</td>
-                <td>
-                  <div className={styles.name}>{prisoner.name}</div>
-                </td>
-                <td className={styles.coConspirators}>{prisoner.coConspirators}</td>
-                <td className={styles.incarcerationDate}>
-                  {prisoner.incarcerationDate ?? "—"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
+                <tr
+                  className={styles.main}
+                  onClick={onActivate}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") onActivate();
+                  }}
+                >
+                  <td>
+                    <div className={styles.name}>{prisoner.name}</div>
+                  </td>
+                  <td className={styles.num}>{prisoner.birthYear || "—"}</td>
+                  <td className={styles.num}>{prisoner.residentId || "—"}</td>
+                  <td className={styles.num}>{prisoner.height || "—"}</td>
+                  <td className={styles.num}>{prisoner.incarcerationDate ?? "—"}</td>
+                  <td className={styles.num}>{prisoner.inmateNumber || "—"}</td>
+                </tr>
+                <tr className={styles.detail} aria-hidden="true">
+                  <td colSpan={6}>
+                    <div className={styles.detailBox}>
+                      <dl>
+                        <dt>공범</dt>
+                        <dd>{prisoner.coConspirators || "—"}</dd>
+                        <dt>출생기관</dt>
+                        <dd>{prisoner.birthInstitution || "—"}</dd>
+                        <dt>국적</dt>
+                        <dd>{prisoner.nationality || "—"}</dd>
+                        <dt>형량</dt>
+                        <dd>{prisoner.sentence || "—"}</dd>
+                        <dt>구사 언어</dt>
+                        <dd>{prisoner.spokenLanguage || "—"}</dd>
+                      </dl>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            );
+          })}
         </table>
       )}
+      {footer}
     </div>
   );
 }

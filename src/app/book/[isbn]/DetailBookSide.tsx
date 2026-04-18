@@ -71,7 +71,7 @@ export function DetailBookSide({
           <dd className={styles.num}>{book.form || "—"}</dd>
           <dt>페이지</dt>
           <dd className={styles.num}>{book.pages ? `${book.pages} p.` : "—"}</dd>
-          <dt>등록일자</dt>
+          <dt>입고날짜</dt>
           <dd className={styles.num}>{book.registrationDate || "—"}</dd>
           <dt>언어</dt>
           <dd>{book.language || "—"}</dd>

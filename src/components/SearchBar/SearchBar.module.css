@@ -1,16 +1,31 @@
 .form {
+  position: fixed;
+  bottom: 24px;
+  z-index: 70;
   display: flex;
-  padding: 56px 24px 0;
+  background: transparent;
+}
+
+.formLeft {
+  left: 32px;
+  width: calc(100vw * var(--left-ratio) - 64px);
+}
+
+.formRight {
+  left: calc(100vw * var(--left-ratio) + 32px);
+  width: calc(100vw * (1 - var(--left-ratio)) - 64px);
 }
 
 .input {
   width: 100%;
   background: transparent;
   color: #000000;
-  border: 1px solid #000000;
-  padding: 6px 10px;
+  border: none;
+  border-bottom: 1px solid #000000;
+  border-radius: 0;
+  padding: 8px 4px;
   font-family: var(--font-en);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0;
   min-width: 0;
 }
@@ -21,6 +36,7 @@
 }
 
 .input:focus {
-  outline: 1px solid #000000;
-  outline-offset: 1px;
+  outline: none;
+  border-bottom-width: 2px;
+  padding-bottom: 7px;
 }

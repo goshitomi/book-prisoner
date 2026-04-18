@@ -1,5 +1,6 @@
 "use client";
 
+import { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import type { BookPrisonerPair } from "@/lib/types";
 import styles from "./BookPanel.module.css";
@@ -9,9 +10,10 @@ interface Props {
   isFallback: boolean;
   fallbackReason: string | null;
   query?: string | null;
+  footer?: ReactNode;
 }
 
-export function BookPanel({ items, isFallback, fallbackReason, query }: Props) {
+export function BookPanel({ items, isFallback, fallbackReason, query, footer }: Props) {
   const router = useRouter();
   return (
     <div className={styles.root}>
@@ -37,33 +39,59 @@ export function BookPanel({ items, isFallback, fallbackReason, query }: Props) {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>청구기호</th>
               <th>표제</th>
-              <th>저자</th>
-              <th>등록일</th>
+              <th>발행일</th>
+              <th>ISBN</th>
+              <th>판형</th>
+              <th>입고날짜</th>
+              <th>청구기호</th>
             </tr>
           </thead>
-          <tbody>
-            {items.map(({ book }) => (
-              <tr
-                key={book.isbn13 || book.callNo || book.title}
-                onClick={() => book.isbn13 && router.push(`/book/${book.isbn13}`)}
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && book.isbn13) router.push(`/book/${book.isbn13}`);
-                }}
-              >
-                <td className={styles.callNo}>{book.callNo ?? "—"}</td>
-                <td>
-                  <div className={styles.title}>{book.title}</div>
-                </td>
-                <td className={styles.authors}>{book.authors}</td>
-                <td className={styles.regDate}>{book.registrationDate ?? "—"}</td>
-              </tr>
-            ))}
-          </tbody>
+          {items.map(({ book }) => {
+            const onActivate = () => book.isbn13 && router.push(`/book/${book.isbn13}`);
+            return (
+              <tbody key={book.isbn13 || book.callNo || book.title} className={styles.group}>
+                <tr
+                  className={styles.main}
+                  onClick={onActivate}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") onActivate();
+                  }}
+                >
+                  <td>
+                    <div className={styles.title}>{book.title}</div>
+                  </td>
+                  <td className={styles.num}>{book.publicationYear || "—"}</td>
+                  <td className={styles.num}>{book.isbn13 || "—"}</td>
+                  <td className={styles.num}>{book.form || "—"}</td>
+                  <td className={styles.num}>{book.registrationDate ?? "—"}</td>
+                  <td className={styles.num}>{book.callNo ?? "—"}</td>
+                </tr>
+                <tr className={styles.detail} aria-hidden="true">
+                  <td colSpan={6}>
+                    <div className={styles.detailBox}>
+                      <dl>
+                        <dt>저자</dt>
+                        <dd>{book.authors || "—"}</dd>
+                        <dt>출판사</dt>
+                        <dd>{book.publisher || "—"}</dd>
+                        <dt>발행지</dt>
+                        <dd>{book.publishPlace || "—"}</dd>
+                        <dt>페이지</dt>
+                        <dd>{book.pages ? `${book.pages} p.` : "—"}</dd>
+                        <dt>언어</dt>
+                        <dd>{book.language || "—"}</dd>
+                      </dl>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            );
+          })}
         </table>
       )}
+      {footer}
     </div>
   );
 }

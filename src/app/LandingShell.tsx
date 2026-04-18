@@ -115,41 +115,44 @@ export function LandingShell({ data }: Props) {
 
   const showCursor = process.env.NEXT_PUBLIC_ENABLE_DUAL_CURSOR !== "false";
 
+  const pagination = <Pagination page={data.page} totalPages={data.totalPages} />;
   const bookPanel = (
-    <>
-      <SearchBar
-        value={searchValue}
-        onChange={setSearchValue}
-        onSubmit={submitSearch}
-        placeholder="Search a book"
-        ariaLabel="도서 검색"
-      />
-      <BookPanel
-        items={data.items}
-        isFallback={data.isFallback}
-        fallbackReason={data.fallbackReason}
-        query={data.query}
-      />
-      <Pagination page={data.page} totalPages={data.totalPages} />
-    </>
+    <BookPanel
+      items={data.items}
+      isFallback={data.isFallback}
+      fallbackReason={data.fallbackReason}
+      query={data.query}
+      footer={pagination}
+    />
   );
   const prisonerPanel = (
-    <>
-      <SearchBar
-        value={searchValue}
-        onChange={setSearchValue}
-        onSubmit={submitSearch}
-        placeholder="Search an inmate"
-        ariaLabel="수감자 검색"
-      />
-      <PrisonerPanel
-        items={data.items}
-        isFallback={data.isFallback}
-        fallbackReason={data.fallbackReason}
-        query={data.query}
-      />
-      <Pagination page={data.page} totalPages={data.totalPages} />
-    </>
+    <PrisonerPanel
+      items={data.items}
+      isFallback={data.isFallback}
+      fallbackReason={data.fallbackReason}
+      query={data.query}
+      footer={pagination}
+    />
+  );
+  const bookSearch = (
+    <SearchBar
+      value={searchValue}
+      onChange={setSearchValue}
+      onSubmit={submitSearch}
+      placeholder="Search a book"
+      ariaLabel="도서 검색"
+      side={swapped ? "right" : "left"}
+    />
+  );
+  const prisonerSearch = (
+    <SearchBar
+      value={searchValue}
+      onChange={setSearchValue}
+      onSubmit={submitSearch}
+      placeholder="Search an inmate"
+      ariaLabel="수감자 검색"
+      side={swapped ? "left" : "right"}
+    />
   );
 
   return (
@@ -160,6 +163,8 @@ export function LandingShell({ data }: Props) {
         left={swapped ? prisonerPanel : bookPanel}
         right={swapped ? bookPanel : prisonerPanel}
       />
+      {bookSearch}
+      {prisonerSearch}
       <div aria-live="polite" style={{ position: "absolute", left: -9999, top: -9999 }}>
         {data.items.length}건 조회 완료
       </div>

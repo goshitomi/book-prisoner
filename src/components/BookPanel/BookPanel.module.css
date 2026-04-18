@@ -1,5 +1,5 @@
 .root {
-  padding: 24px 24px 24px;
+  padding: 24px 24px 120px;
   min-height: 100vh;
   background: var(--color-book-bg);
   color: var(--color-book-fg);
@@ -31,44 +31,104 @@
   border-collapse: collapse;
   font-size: 12px;
   table-layout: fixed;
+  border: 1px solid #000000;
 }
 
 .table thead th {
   font-family: var(--font-en);
   font-weight: 600;
-  font-size: 12px;
+  font-size: 11px;
   text-align: left;
-  letter-spacing: 0.05em;
-  padding: 8px 10px;
+  letter-spacing: 0.02em;
+  padding: 8px 6px;
   border-bottom: 1px solid #000000;
+  border-right: 1px solid #000000;
   color: #000000;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+.table thead th:last-child {
+  border-right: none;
 }
 
 .table thead th:nth-child(1) { width: 28%; }
-.table thead th:nth-child(2) { width: 38%; }
-.table thead th:nth-child(3) { width: 22%; }
+.table thead th:nth-child(2) { width: 12%; }
+.table thead th:nth-child(3) { width: 18%; }
 .table thead th:nth-child(4) { width: 12%; }
+.table thead th:nth-child(5) { width: 14%; }
+.table thead th:nth-child(6) { width: 16%; }
 
-.table tbody td {
-  padding: 10px 8px;
+.group {
   border-bottom: 1px solid #000000;
+}
+
+.main {
+  cursor: pointer;
+  transition: background-color 0.15s ease-out;
+}
+
+.main td {
+  padding: 10px 8px;
   vertical-align: top;
   word-break: keep-all;
   overflow-wrap: break-word;
+  border-right: 1px solid #000000;
+  border-bottom: 1px solid #000000;
 }
 
-.table tbody tr {
-  cursor: pointer;
+.main td:last-child {
+  border-right: none;
 }
 
-.callNo {
-  font-family: var(--font-en);
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
+.group:has(.main:hover) .main,
+.group:has(.detail:hover) .main {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.detail td {
+  padding: 0;
+  border: none;
+}
+
+.detailBox {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.25s ease-out, opacity 0.2s ease-out, padding 0.25s ease-out;
+  padding: 0 16px;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.group:has(.main:hover) .detailBox,
+.group:has(.detail:hover) .detailBox {
+  max-height: 240px;
+  opacity: 1;
+  padding: 14px 16px;
+  border-bottom: 1px solid #000000;
+}
+
+.detailBox dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  row-gap: 6px;
+  column-gap: 16px;
   font-size: 12px;
-  letter-spacing: 0;
-  overflow-wrap: anywhere;
+}
+
+.detailBox dt {
+  color: rgba(0, 0, 0, 0.55);
+  font-family: var(--font-en);
+  letter-spacing: 0.04em;
+  font-size: 11px;
+  padding-top: 1px;
+}
+
+.detailBox dd {
+  margin: 0;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .title {
@@ -78,17 +138,13 @@
   line-height: 1.35;
 }
 
-.authors {
-  font-size: 12px;
-  color: #000000;
-}
-
-.regDate {
+.num {
   font-family: var(--font-en);
   font-variant-numeric: tabular-nums;
-  font-size: 11px;
-  color: #000000;
-  white-space: nowrap;
+  font-feature-settings: "tnum";
+  font-size: 12px;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
 .empty {
