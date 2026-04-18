@@ -142,8 +142,7 @@ export function LandingShell({ data }: Props) {
       onSubmit={submitSearch}
       placeholder="Search a book"
       ariaLabel="도서 검색"
-      side={swapped ? "right" : "left"}
-      examples={["Search a book", "Title, author, publisher...", "ISBN, keyword...", "한국사", "민주주의"]}
+      examples={["Search a book", "Title, author, publisher...", "ISBN, keyword..."]}
     />
   );
   const prisonerSearch = (
@@ -153,21 +152,23 @@ export function LandingShell({ data }: Props) {
       onSubmit={submitSearch}
       placeholder="Search an inmate"
       ariaLabel="수감자 검색"
-      side={swapped ? "left" : "right"}
       examples={["Search an inmate", "Name, ID number...", "수감자명, 수인번호..."]}
     />
   );
 
   return (
     <HoverSyncProvider>
-      <Header swapped={swapped} onToggleSwap={toggleSwap} />
+      <Header
+        swapped={swapped}
+        onToggleSwap={toggleSwap}
+        bookSearch={bookSearch}
+        prisonerSearch={prisonerSearch}
+      />
       <SplitScreen
         ref={splitRef}
         left={swapped ? prisonerPanel : bookPanel}
         right={swapped ? bookPanel : prisonerPanel}
       />
-      {bookSearch}
-      {prisonerSearch}
       <div aria-live="polite" style={{ position: "absolute", left: -9999, top: -9999 }}>
         {data.items.length}건 조회 완료
       </div>

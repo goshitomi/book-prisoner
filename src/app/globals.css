@@ -1,4 +1,18 @@
-@import url("https://fonts.cdnfonts.com/css/times-new-roman");
+@font-face {
+  font-family: "Panama";
+  src: url("/fonts/Panama-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pyeonsan";
+  src: url("/fonts/Pyeonsan-BetaB.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --color-book-bg: #ffffff;
@@ -11,9 +25,10 @@
 
   --left-ratio: 0.5;
   --split-line-width: 12px;
+  --header-height: 96px;
 
-  --font-ko: "Noto Sans KR", "Noto Sans CJK KR", system-ui, -apple-system, sans-serif;
-  --font-en: "Times New Roman", "Times", "Liberation Serif", serif;
+  --font-ko: "Pyeonsan", "Noto Sans KR", "Noto Sans CJK KR", system-ui, -apple-system, sans-serif;
+  --font-en: "Panama", "Times New Roman", "Times", "Liberation Serif", serif;
 }
 
 * {

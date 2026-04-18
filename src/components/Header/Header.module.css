@@ -3,46 +3,67 @@
   top: 0;
   left: 0;
   right: 0;
+  z-index: 80;
+  display: grid;
+  grid-template-columns: calc(100vw * var(--left-ratio)) 1fr;
+  background: #ffffff;
+  color: #000000;
+  min-height: var(--header-height);
+}
+
+.col {
+  padding: 18px 24px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.row {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 16px;
-  padding: 12px 24px 0;
-  z-index: 80;
-  background: transparent;
-  color: #000000;
-  pointer-events: none;
+  width: 100%;
 }
 
-.root > * {
-  pointer-events: auto;
-}
-
-.brand {
+.title {
   font-family: var(--font-en);
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.02em;
+  font-weight: 400;
+  font-size: 20px;
+  letter-spacing: 0;
+  margin: 0;
   white-space: nowrap;
+}
+
+.titleLink {
+  display: inline-block;
+  cursor: pointer;
+  transition: opacity 0.12s ease-out;
+}
+
+.titleLink:hover {
+  opacity: 0.55;
 }
 
 .reverseBtn {
   background: transparent;
   border: none;
   color: #000000;
-  padding: 6px 0;
+  padding: 0;
   font-family: var(--font-en);
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: 0.04em;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.02em;
   white-space: nowrap;
   cursor: pointer;
+  align-self: flex-start;
 }
 
 .reverseBtn:hover {
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 .reverseBtn[aria-pressed="true"] {
-  opacity: 0.6;
+  opacity: 0.55;
 }

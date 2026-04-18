@@ -1,7 +1,6 @@
 "use client";
 
 import { ReactNode } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { BookPrisonerPair } from "@/lib/types";
 import { useHoverSync } from "@/components/HoverSync/HoverSyncContext";
@@ -20,11 +19,6 @@ export function PrisonerPanel({ items, isFallback, fallbackReason, query, footer
   const { hoveredKey, setHovered } = useHoverSync();
   return (
     <div className={styles.root}>
-      <h2 id="prisoner-heading" className={styles.heading}>
-        <Link href="/" className={styles.headingLink} aria-label="홈으로">
-          List of Prisoners
-        </Link>
-      </h2>
       {isFallback && fallbackReason === "empty_result" && (
         <div className={styles.fallbackBadge} role="status">
           {query
@@ -82,19 +76,25 @@ export function PrisonerPanel({ items, isFallback, fallbackReason, query, footer
                 </tr>
                 <tr className={styles.detail} aria-hidden="true">
                   <td colSpan={6}>
-                    <div className={styles.detailBox}>
-                      <dl>
-                        <dt>공범</dt>
-                        <dd>{prisoner.coConspirators || "—"}</dd>
-                        <dt>출생기관</dt>
-                        <dd>{prisoner.birthInstitution || "—"}</dd>
-                        <dt>국적</dt>
-                        <dd>{prisoner.nationality || "—"}</dd>
-                        <dt>형량</dt>
-                        <dd>{prisoner.sentence || "—"}</dd>
-                        <dt>구사 언어</dt>
-                        <dd>{prisoner.spokenLanguage || "—"}</dd>
-                      </dl>
+                    <div className={styles.fold}>
+                      <div className={styles.foldTop}>
+                        <dl>
+                          <dt>공범</dt>
+                          <dd>{prisoner.coConspirators || "—"}</dd>
+                          <dt>출생기관</dt>
+                          <dd>{prisoner.birthInstitution || "—"}</dd>
+                          <dt>국적</dt>
+                          <dd>{prisoner.nationality || "—"}</dd>
+                        </dl>
+                      </div>
+                      <div className={styles.foldBottom}>
+                        <dl>
+                          <dt>형량</dt>
+                          <dd>{prisoner.sentence || "—"}</dd>
+                          <dt>구사 언어</dt>
+                          <dd>{prisoner.spokenLanguage || "—"}</dd>
+                        </dl>
+                      </div>
                     </div>
                   </td>
                 </tr>

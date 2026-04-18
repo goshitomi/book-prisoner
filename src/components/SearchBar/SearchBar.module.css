@@ -1,19 +1,9 @@
 .form {
-  position: fixed;
-  bottom: 24px;
-  z-index: 70;
   display: flex;
+  flex: 1;
+  min-width: 0;
+  max-width: 320px;
   background: transparent;
-}
-
-.formLeft {
-  left: 32px;
-  width: calc(100vw * var(--left-ratio) - 64px);
-}
-
-.formRight {
-  left: calc(100vw * var(--left-ratio) + 32px);
-  width: calc(100vw * (1 - var(--left-ratio)) - 64px);
 }
 
 .input {
@@ -23,7 +13,7 @@
   border: none;
   border-bottom: 1px solid #000000;
   border-radius: 0;
-  padding: 8px 4px;
+  padding: 6px 4px;
   font-family: var(--font-en);
   font-size: 13px;
   letter-spacing: 0;
@@ -38,5 +28,5 @@
 .input:focus {
   outline: none;
   border-bottom-width: 2px;
-  padding-bottom: 7px;
+  padding-bottom: 5px;
 }

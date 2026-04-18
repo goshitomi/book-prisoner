@@ -1,7 +1,6 @@
 "use client";
 
 import { ReactNode } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { BookPrisonerPair } from "@/lib/types";
 import { useHoverSync } from "@/components/HoverSync/HoverSyncContext";
@@ -20,11 +19,6 @@ export function BookPanel({ items, isFallback, fallbackReason, query, footer }: 
   const { hoveredKey, setHovered } = useHoverSync();
   return (
     <div className={styles.root}>
-      <h2 id="book-heading" className={styles.heading}>
-        <Link href="/" className={styles.headingLink} aria-label="홈으로">
-          List of Books
-        </Link>
-      </h2>
       {isFallback && fallbackReason === "empty_result" && (
         <div className={styles.fallbackBadge} role="status">
           {query
@@ -82,19 +76,25 @@ export function BookPanel({ items, isFallback, fallbackReason, query, footer }: 
                 </tr>
                 <tr className={styles.detail} aria-hidden="true">
                   <td colSpan={6}>
-                    <div className={styles.detailBox}>
-                      <dl>
-                        <dt>저자</dt>
-                        <dd>{book.authors || "—"}</dd>
-                        <dt>출판사</dt>
-                        <dd>{book.publisher || "—"}</dd>
-                        <dt>발행지</dt>
-                        <dd>{book.publishPlace || "—"}</dd>
-                        <dt>페이지</dt>
-                        <dd>{book.pages ? `${book.pages} p.` : "—"}</dd>
-                        <dt>언어</dt>
-                        <dd>{book.language || "—"}</dd>
-                      </dl>
+                    <div className={styles.fold}>
+                      <div className={styles.foldTop}>
+                        <dl>
+                          <dt>저자</dt>
+                          <dd>{book.authors || "—"}</dd>
+                          <dt>출판사</dt>
+                          <dd>{book.publisher || "—"}</dd>
+                          <dt>발행지</dt>
+                          <dd>{book.publishPlace || "—"}</dd>
+                        </dl>
+                      </div>
+                      <div className={styles.foldBottom}>
+                        <dl>
+                          <dt>페이지</dt>
+                          <dd>{book.pages ? `${book.pages} p.` : "—"}</dd>
+                          <dt>언어</dt>
+                          <dd>{book.language || "—"}</dd>
+                        </dl>
+                      </div>
                     </div>
                   </td>
                 </tr>

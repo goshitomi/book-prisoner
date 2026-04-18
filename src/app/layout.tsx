@@ -22,9 +22,6 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <head>
-        <link href="https://fonts.cdnfonts.com/css/univers-next-pro" rel="stylesheet" />
-      </head>
       <body>
         <a href="#main" className="skipLink">
           본문으로 건너뛰기
