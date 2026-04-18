@@ -26,6 +26,13 @@
   pointer-events: none;
   z-index: 90;
   transform: translateX(calc(var(--split-line-width) * -0.5));
+  transition: width 0.12s ease-out, transform 0.12s ease-out;
+}
+
+.root:has(.handle:hover) .splitLine,
+.root:has(.handle.dragging) .splitLine {
+  width: 12px;
+  transform: translateX(-50%);
 }
 
 .handle {

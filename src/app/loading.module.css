@@ -1,0 +1,79 @@
+.root {
+  display: grid;
+  grid-template-columns: 1fr 6px 1fr;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 56px;
+  background: #ffffff;
+}
+
+.divider {
+  background: #000000;
+  width: 6px;
+}
+
+.panel {
+  padding: 24px 24px 48px;
+  overflow: hidden;
+}
+
+.heading {
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0 0 20px;
+  color: #000000;
+}
+
+.headingKo {
+  display: block;
+  font-family: var(--font-ko);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-top: 4px;
+}
+
+.tableWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid #000000;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 28% 38% 22% 12%;
+  gap: 8px;
+  padding: 14px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.cell {
+  height: 12px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.06) 0%,
+    rgba(0, 0, 0, 0.12) 50%,
+    rgba(0, 0, 0, 0.06) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+.colXs { width: 60%; }
+.colSm { width: 80%; }
+.colMd { width: 90%; }
+.colLg { width: 100%; }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell { animation: none; }
+}

@@ -14,17 +14,6 @@ export function SearchBar() {
     setValue(params.get("q") ?? "");
   }, [params]);
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "/" && document.activeElement?.tagName !== "INPUT") {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const q = value.trim();

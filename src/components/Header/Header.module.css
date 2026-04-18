@@ -25,9 +25,9 @@
 
 .reverseBtn {
   background: transparent;
-  border: 1px solid #000000;
+  border: none;
   color: #000000;
-  padding: 6px 14px;
+  padding: 6px 0;
   font-family: var(--font-en);
   font-weight: 600;
   font-size: 12px;
@@ -37,11 +37,11 @@
 }
 
 .reverseBtn:hover {
-  background: #000000;
-  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .reverseBtn[aria-pressed="true"] {
-  background: #000000;
-  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }

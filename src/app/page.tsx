@@ -49,14 +49,16 @@ async function loadSearch(query: string | null, page: number): Promise<SearchRes
       total = result.total;
 
       if (skeleton.length === 0) {
-        skeleton = await fetchNLNewBooks(PAGE_SIZE);
-        total = skeleton.length;
+        const fb = await fetchNLNewBooks(PAGE_SIZE, page);
+        skeleton = fb.items;
+        total = fb.total;
         isFallback = true;
         fallbackReason = "empty_result";
       }
     } else {
-      skeleton = await fetchNLNewBooks(PAGE_SIZE);
-      total = skeleton.length;
+      const fb = await fetchNLNewBooks(PAGE_SIZE, page);
+      skeleton = fb.items;
+      total = fb.total;
     }
 
     skeleton = dedupByIsbn(skeleton);
@@ -84,9 +86,10 @@ async function loadSearch(query: string | null, page: number): Promise<SearchRes
       return { book, prisoner };
     });
 
-    const displayableTotal = query
-      ? Math.min(total || pairs.length, PAGE_SIZE * MAX_PAGES)
-      : pairs.length;
+    const displayableTotal = Math.min(
+      total || pairs.length,
+      PAGE_SIZE * MAX_PAGES,
+    );
     const totalPages = Math.min(
       Math.max(1, Math.ceil(displayableTotal / PAGE_SIZE)),
       MAX_PAGES,

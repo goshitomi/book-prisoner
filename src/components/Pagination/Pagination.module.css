@@ -1,8 +1,6 @@
 .root {
   position: fixed;
-  left: 50%;
   bottom: 20px;
-  transform: translateX(-50%);
   z-index: 70;
   display: flex;
   align-items: center;
@@ -15,6 +13,16 @@
   font-variant-numeric: tabular-nums;
   font-size: 12px;
   letter-spacing: 0.04em;
+}
+
+.rootLeft {
+  left: calc(100vw * var(--left-ratio) * 0.5);
+  transform: translateX(-50%);
+}
+
+.rootRight {
+  left: calc(100vw * var(--left-ratio) + (100vw * (1 - var(--left-ratio))) * 0.5);
+  transform: translateX(-50%);
 }
 
 .page {

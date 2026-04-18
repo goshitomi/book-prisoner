@@ -1,0 +1,82 @@
+.root {
+  display: grid;
+  grid-template-columns: 1fr 6px 1fr;
+  width: 100vw;
+  min-height: 100vh;
+  padding-top: 56px;
+  background: #ffffff;
+}
+
+.divider {
+  background: #000000;
+  width: 6px;
+}
+
+.panel {
+  padding: 32px 48px 80px;
+}
+
+.kicker {
+  width: 120px;
+  height: 10px;
+  margin-bottom: 16px;
+}
+
+.title {
+  width: 70%;
+  height: 36px;
+  margin-bottom: 12px;
+}
+
+.line {
+  height: 12px;
+  margin-bottom: 10px;
+}
+
+.lineShort { width: 40%; }
+.lineLabel { width: 80px; }
+.lineValue { width: 60%; }
+
+.image {
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 3 / 4;
+  margin: 24px 0 32px;
+}
+
+.spec {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 14px 24px;
+  margin-bottom: 40px;
+}
+
+.cta {
+  width: 200px;
+  height: 56px;
+  margin-top: 24px;
+}
+
+.kicker,
+.title,
+.line,
+.image,
+.cta {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.06) 0%,
+    rgba(0, 0, 0, 0.12) 50%,
+    rgba(0, 0, 0, 0.06) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kicker, .title, .line, .image, .cta { animation: none; }
+}

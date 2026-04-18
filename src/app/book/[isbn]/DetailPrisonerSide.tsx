@@ -33,7 +33,7 @@ export function DetailPrisonerSide({
         <h1 className={styles.title}>{prisoner.name}</h1>
         <p className={styles.subtitle}>{prisoner.coConspirators}</p>
 
-        <div
+        <figure
           className={`${styles.imageWrap} ${styles.imagePrisoner} ${inverted ? styles.invert : ""}`}
           onMouseEnter={onImageEnter}
           onMouseLeave={onImageLeave}
@@ -49,7 +49,8 @@ export function DetailPrisonerSide({
           ) : (
             <div className={styles.imagePlaceholder}>사진 미등록 / PHOTO UNAVAILABLE</div>
           )}
-        </div>
+          <figcaption className={styles.imageCaption}>HOVER → 좌우 명·암 반전</figcaption>
+        </figure>
 
         <dl className={styles.spec}>
           <dt>성명</dt>

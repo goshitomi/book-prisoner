@@ -33,7 +33,7 @@ export function DetailBookSide({
         <h1 className={styles.title}>{book.title}</h1>
         <p className={styles.subtitle}>{book.authors}</p>
 
-        <div
+        <figure
           className={`${styles.imageWrap} ${styles.imageBook} ${inverted ? styles.invert : ""}`}
           onMouseEnter={onImageEnter}
           onMouseLeave={onImageLeave}
@@ -49,7 +49,8 @@ export function DetailBookSide({
           ) : (
             <div className={styles.imagePlaceholder}>표지 미등록</div>
           )}
-        </div>
+          <figcaption className={styles.imageCaption}>HOVER → 좌우 명·암 반전</figcaption>
+        </figure>
 
         <dl className={styles.spec}>
           <dt>표제</dt>

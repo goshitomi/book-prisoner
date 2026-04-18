@@ -1,5 +1,5 @@
 .root {
-  padding: 80px 24px 48px;
+  padding: 80px 24px 120px;
   min-height: 100vh;
   background: var(--color-prisoner-bg);
   color: var(--color-prisoner-fg);
@@ -98,11 +98,20 @@
 }
 
 .fallbackBadge {
-  display: inline-block;
-  border: 1px dashed #000000;
-  color: #000000;
-  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--color-accent);
+  background: rgba(255, 46, 46, 0.06);
+  color: var(--color-accent);
+  padding: 8px 12px;
   font-size: 12px;
   letter-spacing: 0.04em;
   margin-bottom: 16px;
+}
+
+.fallbackBadge::before {
+  content: "⚠";
+  font-size: 14px;
+  line-height: 1;
 }

@@ -46,27 +46,28 @@ export function LandingShell({ data }: Props) {
     });
   }, []);
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if ((e.key === "s" || e.key === "S") && document.activeElement?.tagName !== "INPUT") {
-        toggleSwap();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [toggleSwap]);
-
   // 스왑/페이지 전환 시 스크롤 리셋
   useEffect(() => {
     splitRef.current?.resetScroll();
   }, [swapped, data.page]);
 
-  // 탭 타이틀 타이프라이터
+  // 탭 타이틀 타이프라이터 — 탭이 백그라운드일 때만 동작.
   useEffect(() => {
     const FULL = "Book as Prisoner";
     let pos = 0;
-    let tid: ReturnType<typeof setTimeout>;
+    let tid: ReturnType<typeof setTimeout> | null = null;
+
+    const stop = () => {
+      if (tid) clearTimeout(tid);
+      tid = null;
+      document.title = FULL;
+    };
+
     const step = () => {
+      if (document.visibilityState === "visible") {
+        stop();
+        return;
+      }
       pos++;
       if (pos > FULL.length) {
         pos = 0;
@@ -77,9 +78,25 @@ export function LandingShell({ data }: Props) {
         tid = setTimeout(step, 110);
       }
     };
+
+    const onVis = () => {
+      if (document.visibilityState === "hidden") {
+        if (!tid) {
+          pos = 0;
+          tid = setTimeout(step, 600);
+        }
+      } else {
+        stop();
+      }
+    };
+
     document.title = FULL;
-    tid = setTimeout(step, 1200);
-    return () => clearTimeout(tid);
+    document.addEventListener("visibilitychange", onVis);
+    onVis();
+    return () => {
+      document.removeEventListener("visibilitychange", onVis);
+      stop();
+    };
   }, []);
 
   const showCursor = process.env.NEXT_PUBLIC_ENABLE_DUAL_CURSOR !== "false";
@@ -112,7 +129,8 @@ export function LandingShell({ data }: Props) {
       <div aria-live="polite" style={{ position: "absolute", left: -9999, top: -9999 }}>
         {data.items.length}건 조회 완료
       </div>
-      <Pagination page={data.page} totalPages={data.totalPages} />
+      <Pagination page={data.page} totalPages={data.totalPages} side="left" />
+      <Pagination page={data.page} totalPages={data.totalPages} side="right" />
       {showCursor && <DualCursor />}
     </>
   );

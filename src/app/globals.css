@@ -8,7 +8,7 @@
   --color-muted: #8a8a8a;
 
   --left-ratio: 0.5;
-  --split-line-width: 3px;
+  --split-line-width: 6px;
 
   --font-ko: "Noto Sans KR", "Noto Sans CJK KR", system-ui, -apple-system, sans-serif;
   --font-en: "Univers Next Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -89,13 +89,23 @@ a {
   }
 }
 
-::-webkit-scrollbar {
-  width: 6px;
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-::-webkit-scrollbar-track {
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
   background: transparent;
 }
-::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 3px;
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+* {
+  scrollbar-width: none;
 }

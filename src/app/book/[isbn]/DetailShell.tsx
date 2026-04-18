@@ -43,15 +43,6 @@ export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
     });
   }, []);
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (document.activeElement?.tagName === "INPUT") return;
-      if (e.key === "s" || e.key === "S") toggleSwap();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [toggleSwap]);
-
   const onRequest = () => setOverlayOpen(true);
   const onClose = () => setOverlayOpen(false);
 

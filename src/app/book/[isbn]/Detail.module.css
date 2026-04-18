@@ -35,11 +35,34 @@
   width: 100%;
   aspect-ratio: 3 / 4;
   max-width: 360px;
-  margin-bottom: 32px;
+  margin: 0 0 32px;
   background: rgba(128, 128, 128, 0.08);
   border: 1px solid currentColor;
   position: relative;
   overflow: hidden;
+}
+
+.imageCaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 6px 10px;
+  font-family: var(--font-en);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-align: center;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.16s ease-out, transform 0.16s ease-out;
+  pointer-events: none;
+}
+
+.imageWrap:hover .imageCaption {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .imageWrap img {
