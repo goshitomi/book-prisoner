@@ -9,10 +9,9 @@
   gap: 16px;
   padding: 0 24px;
   z-index: 80;
-  height: 56px;
+  height: 44px;
   background: #ffffff;
   color: #000000;
-  border-bottom: 1px solid #000000;
 }
 
 .brand {
@@ -37,11 +36,9 @@
 }
 
 .reverseBtn:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  opacity: 0.6;
 }
 
 .reverseBtn[aria-pressed="true"] {
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  opacity: 0.6;
 }
