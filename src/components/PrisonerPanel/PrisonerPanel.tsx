@@ -1,8 +1,10 @@
 "use client";
 
 import { ReactNode } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { BookPrisonerPair } from "@/lib/types";
+import { useHoverSync } from "@/components/HoverSync/HoverSyncContext";
 import styles from "./PrisonerPanel.module.css";
 
 interface Props {
@@ -15,11 +17,13 @@ interface Props {
 
 export function PrisonerPanel({ items, isFallback, fallbackReason, query, footer }: Props) {
   const router = useRouter();
+  const { hoveredKey, setHovered } = useHoverSync();
   return (
     <div className={styles.root}>
       <h2 id="prisoner-heading" className={styles.heading}>
-        CURRENT INMATES
-        <span className={styles.headingKo}>현 수감자 명부</span>
+        <Link href="/" className={styles.headingLink} aria-label="홈으로">
+          List of Prisoners
+        </Link>
       </h2>
       {isFallback && fallbackReason === "empty_result" && (
         <div className={styles.fallbackBadge} role="status">
@@ -47,12 +51,17 @@ export function PrisonerPanel({ items, isFallback, fallbackReason, query, footer
               <th>수인번호</th>
             </tr>
           </thead>
-          {items.map(({ book, prisoner }) => {
+          {items.map(({ book, prisoner }, idx) => {
+            const rowKey = book.isbn13 || book.callNo || `${book.title}-${idx}`;
             const onActivate = () => book.isbn13 && router.push(`/book/${book.isbn13}`);
+            const isHovered = hoveredKey === rowKey;
             return (
               <tbody
-                key={book.isbn13 || prisoner.inmateNumber || prisoner.name}
+                key={rowKey}
                 className={styles.group}
+                data-hovered={isHovered ? "1" : "0"}
+                onMouseEnter={() => setHovered(rowKey)}
+                onMouseLeave={() => setHovered(null)}
               >
                 <tr
                   className={styles.main}

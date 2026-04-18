@@ -5,13 +5,17 @@
   right: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 16px;
-  padding: 0 24px;
+  padding: 12px 24px 0;
   z-index: 80;
-  height: 44px;
-  background: #ffffff;
+  background: transparent;
   color: #000000;
+  pointer-events: none;
+}
+
+.root > * {
+  pointer-events: auto;
 }
 
 .brand {

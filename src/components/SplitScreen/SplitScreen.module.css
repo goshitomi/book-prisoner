@@ -31,7 +31,7 @@
 
 .root:has(.handle:hover) .splitLine,
 .root:has(.handle.dragging) .splitLine {
-  width: 12px;
+  width: 24px;
   transform: translateX(-50%);
 }
 
@@ -39,7 +39,7 @@
   position: fixed;
   top: 0;
   left: calc(100vw * var(--left-ratio));
-  width: 12px;
+  width: 24px;
   height: 100vh;
   transform: translateX(-50%);
   background: transparent;

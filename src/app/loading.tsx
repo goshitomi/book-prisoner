@@ -2,12 +2,9 @@ import styles from "./loading.module.css";
 
 export default function Loading() {
   const rows = Array.from({ length: 10 });
-  const skeleton = (heading: string, headingKo: string) => (
+  const skeleton = (heading: string) => (
     <div className={styles.panel}>
-      <h2 className={styles.heading}>
-        {heading}
-        <span className={styles.headingKo}>{headingKo}</span>
-      </h2>
+      <h2 className={styles.heading}>{heading}</h2>
       <div className={styles.tableWrap}>
         {rows.map((_, i) => (
           <div key={i} className={styles.row}>
@@ -23,9 +20,9 @@ export default function Loading() {
 
   return (
     <div className={styles.root} aria-busy="true" aria-label="명부 불러오는 중">
-      {skeleton("CURRENT HOLDINGS", "현재 소장 도서")}
+      {skeleton("List of Books")}
       <div className={styles.divider} />
-      {skeleton("CURRENT INMATES", "현 수감자 명부")}
+      {skeleton("List of Prisoners")}
     </div>
   );
 }

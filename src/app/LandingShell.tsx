@@ -7,6 +7,7 @@ import { BookPanel } from "@/components/BookPanel/BookPanel";
 import { PrisonerPanel } from "@/components/PrisonerPanel/PrisonerPanel";
 import { Header } from "@/components/Header/Header";
 import { SearchBar } from "@/components/SearchBar/SearchBar";
+import { HoverSyncProvider } from "@/components/HoverSync/HoverSyncContext";
 import { SplitScreen, SplitScreenHandle } from "@/components/SplitScreen/SplitScreen";
 import { Pagination } from "@/components/Pagination/Pagination";
 import type { SearchResponse } from "@/lib/types";
@@ -158,7 +159,7 @@ export function LandingShell({ data }: Props) {
   );
 
   return (
-    <>
+    <HoverSyncProvider>
       <Header swapped={swapped} onToggleSwap={toggleSwap} />
       <SplitScreen
         ref={splitRef}
@@ -171,6 +172,6 @@ export function LandingShell({ data }: Props) {
         {data.items.length}건 조회 완료
       </div>
       {showCursor && <DualCursor />}
-    </>
+    </HoverSyncProvider>
   );
 }
