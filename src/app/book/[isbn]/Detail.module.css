@@ -1,9 +1,10 @@
 .root {
-  padding: 88px 48px 80px;
+  padding: 48px 48px 80px;
   min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr;
   gap: 40px;
+  color: #000000;
 }
 
 .kicker {
@@ -11,24 +12,26 @@
   font-size: 11px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: #000000;
   margin-bottom: 12px;
 }
 
 .title {
   font-family: var(--font-ko);
   font-weight: 500;
-  font-size: 40px;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin: 0 0 8px;
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+  color: #000000;
   word-break: keep-all;
 }
 
 .subtitle {
-  font-size: 16px;
-  color: var(--color-muted);
-  margin: 0 0 32px;
+  font-family: var(--font-ko);
+  font-size: 13px;
+  color: #000000;
+  margin: 0 0 28px;
 }
 
 .imageWrap {
@@ -36,8 +39,8 @@
   aspect-ratio: 3 / 4;
   max-width: 360px;
   margin: 0 0 32px;
-  background: rgba(128, 128, 128, 0.08);
-  border: 1px solid currentColor;
+  background: #f2f2f2;
+  border: 1px solid #000000;
   position: relative;
   overflow: hidden;
 }
@@ -53,7 +56,7 @@
   letter-spacing: 0.12em;
   text-align: center;
   color: #ffffff;
-  background: rgba(0, 0, 0, 0.7);
+  background: #000000;
   opacity: 0;
   transform: translateY(100%);
   transition: opacity 0.16s ease-out, transform 0.16s ease-out;
@@ -96,13 +99,13 @@
   font-family: var(--font-ko);
   font-size: 12px;
   letter-spacing: 0.1em;
-  color: var(--color-muted);
+  color: #000000;
   background: repeating-linear-gradient(
     45deg,
     transparent,
     transparent 10px,
-    rgba(128, 128, 128, 0.08) 10px,
-    rgba(128, 128, 128, 0.08) 11px
+    #e8e8e8 10px,
+    #e8e8e8 11px
   );
 }
 
@@ -110,12 +113,14 @@
   display: grid;
   grid-template-columns: 140px 1fr;
   gap: 14px 24px;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
   font-size: 14px;
+  color: #000000;
 }
 
 .spec dt {
-  color: var(--color-muted);
+  color: #000000;
+  font-family: var(--font-en);
   font-size: 12px;
   letter-spacing: 0.05em;
   padding-top: 4px;
@@ -123,49 +128,65 @@
 
 .spec dd {
   margin: 0;
+  color: #000000;
+  font-family: var(--font-ko);
   line-height: 1.4;
   word-break: keep-all;
 }
 
 .spec .num {
+  font-family: var(--font-en);
   font-variant-numeric: tabular-nums;
 }
 
 .cta {
   display: inline-block;
-  background: transparent;
-  border: 1px solid currentColor;
-  color: inherit;
-  padding: 18px 32px;
+  background: #ffffff;
+  border: 1px solid #000000;
+  color: #000000;
+  padding: 14px 28px;
   font-family: var(--font-ko);
-  font-size: 16px;
+  font-size: 15px;
   letter-spacing: 0.15em;
   cursor: pointer;
-  transition: letter-spacing 0.2s ease-out;
-  margin-top: 24px;
+  transition: letter-spacing 0.2s ease-out, background 0.2s ease-out, color 0.2s ease-out;
+  margin-top: 16px;
 }
 
-.cta:hover {
-  letter-spacing: 0.3em;
-  background: currentColor;
+.cta:hover,
+.cta:focus-visible {
+  letter-spacing: 0.28em;
+  background: #000000;
+  color: #ffffff;
 }
 
-.ctaBook:hover {
-  color: var(--color-book-bg);
-}
-.ctaPrisoner:hover {
-  color: var(--color-prisoner-bg);
+.ctaBook,
+.ctaPrisoner {
+  background: #ffffff;
+  color: #000000;
 }
 
 .back {
   display: inline-flex;
   gap: 8px;
+  font-family: var(--font-ko);
   font-size: 12px;
   letter-spacing: 0.05em;
-  color: var(--color-muted);
+  color: #000000;
   margin-top: 40px;
 }
 
 .back:hover {
-  color: inherit;
+  text-decoration: underline;
+}
+
+.reverseFloat {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 120;
+}
+
+.hiddenStyles {
+  display: none;
 }

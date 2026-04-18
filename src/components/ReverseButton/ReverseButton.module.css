@@ -1,0 +1,22 @@
+.btn {
+  background: transparent;
+  border: 1px solid #000000;
+  color: #000000;
+  padding: 4px 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  transition: background 0.15s ease-out, color 0.15s ease-out;
+}
+
+.btn:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+.btn[aria-pressed="true"] {
+  background: #000000;
+  color: #ffffff;
+}

@@ -1,10 +1,11 @@
 .root {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 24px 14px 8px;
-  margin-top: 16px;
+  padding: 10px 24px 6px;
+  margin-top: 8px;
   color: #000000;
   font-family: var(--font-en);
   font-variant-numeric: tabular-nums;
@@ -12,10 +13,25 @@
   letter-spacing: 0.04em;
 }
 
+.pages {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trailing {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+}
+
 .page {
   background: transparent;
   border: none;
-  color: inherit;
+  color: #000000;
   padding: 4px 6px;
   cursor: pointer;
   min-width: 22px;
@@ -28,19 +44,19 @@
 }
 
 .page:disabled {
-  opacity: 0.3;
+  color: #000000;
+  opacity: 1;
   cursor: default;
+}
+
+.page:disabled:hover {
+  text-decoration: none;
 }
 
 .current {
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 4px;
-}
-
-.ellipsis {
-  padding: 0 4px;
-  opacity: 0.5;
 }
 
 .arrow {

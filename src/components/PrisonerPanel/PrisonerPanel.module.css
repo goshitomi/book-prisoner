@@ -1,8 +1,31 @@
 .root {
-  padding: calc(var(--header-height) + 16px) 0 120px;
+  padding: 0 0 20px;
   min-height: 100vh;
   background: var(--color-prisoner-bg);
-  color: var(--color-prisoner-fg);
+  color: #000000;
+}
+
+.leading {
+  padding: 20px 24px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #ffffff;
+  animation: drawFade 0.35s cubic-bezier(0.22, 0.61, 0.36, 1) 0.05s both;
+}
+
+.titleBlock {
+  font-family: var(--font-en);
+  font-weight: 400;
+  font-size: 20px;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.titleLink {
+  display: inline-block;
+  color: #000000;
 }
 
 .table {
@@ -10,29 +33,43 @@
   border-collapse: collapse;
   font-size: 12px;
   table-layout: fixed;
-  border-top: 6px solid #000000;
-  border-bottom: 6px solid #000000;
-  border-left: none;
-  border-right: none;
+  color: #000000;
+  animation: tableReveal 1s cubic-bezier(0.22, 0.61, 0.36, 1) 0.55s both;
 }
 
-.table thead th {
+.table thead th,
+.th {
   font-family: var(--font-en);
   font-weight: 400;
   font-size: 12px;
   text-align: left;
   letter-spacing: 0.02em;
   padding: 10px 10px;
-  border-bottom: 6px solid #000000;
-  border-right: 6px solid #000000;
   color: #000000;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
+  user-select: none;
+  border-top: 6px solid #000000;
+  border-bottom: 6px solid #000000;
+  border-right: 6px solid #000000;
 }
 
 .table thead th:last-child {
   border-right: none;
+}
+
+.thInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.sortMark {
+  font-size: 10px;
+  color: #000000;
 }
 
 .table thead th:nth-child(1) { width: 22%; }
@@ -43,7 +80,7 @@
 .table thead th:nth-child(6) { width: 18%; }
 
 .group {
-  border-bottom: 6px solid #000000;
+  color: #000000;
 }
 
 .main {
@@ -56,6 +93,7 @@
   vertical-align: top;
   word-break: keep-all;
   overflow-wrap: break-word;
+  color: #000000;
   border-right: 6px solid #000000;
   border-bottom: 6px solid #000000;
 }
@@ -67,7 +105,7 @@
 .group:has(.main:hover) .main,
 .group:has(.detail:hover) .main,
 .group[data-hovered="1"] .main {
-  background: rgba(0, 0, 0, 0.04);
+  background: #f0f0f0;
 }
 
 .detail td {
@@ -75,12 +113,11 @@
   border: none;
 }
 
-/* 3D paper-fold unfolding: 두 장의 종이가 가운데 접힌 상태에서 펼쳐지는 효과. */
 .fold {
   perspective: 1400px;
   max-height: 0;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.025);
+  background: #fafafa;
   transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -92,6 +129,7 @@
   backface-visibility: hidden;
   transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   background: #ffffff;
+  color: #000000;
 }
 
 .foldTop {
@@ -111,8 +149,8 @@
   right: 0;
   bottom: 0;
   height: 10px;
-  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.22));
-  opacity: 1;
+  background: linear-gradient(to bottom, transparent, #000000);
+  opacity: 0.22;
   pointer-events: none;
   transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -124,8 +162,8 @@
   right: 0;
   top: 0;
   height: 10px;
-  background: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.22));
-  opacity: 1;
+  background: linear-gradient(to top, transparent, #000000);
+  opacity: 0.22;
   pointer-events: none;
   transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -133,7 +171,7 @@
 .group:has(.main:hover) .fold,
 .group:has(.detail:hover) .fold,
 .group[data-hovered="1"] .fold {
-  max-height: 320px;
+  max-height: 520px;
   border-bottom: 6px solid #000000;
 }
 
@@ -159,15 +197,16 @@
 .foldBottom dl {
   margin: 0;
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 96px 1fr;
   row-gap: 6px;
   column-gap: 16px;
   font-size: 12px;
+  color: #000000;
 }
 
 .foldTop dt,
 .foldBottom dt {
-  color: rgba(0, 0, 0, 0.55);
+  color: #000000;
   font-family: var(--font-en);
   letter-spacing: 0.04em;
   font-size: 11px;
@@ -177,6 +216,8 @@
 .foldTop dd,
 .foldBottom dd {
   margin: 0;
+  color: #000000;
+  font-family: var(--font-ko);
   word-break: keep-all;
   overflow-wrap: break-word;
 }
@@ -186,6 +227,7 @@
   font-weight: 400;
   font-size: 13px;
   line-height: 1.35;
+  color: #000000;
 }
 
 .num {
@@ -195,6 +237,7 @@
   font-size: 12px;
   letter-spacing: 0;
   overflow-wrap: anywhere;
+  color: #000000;
 }
 
 .empty {
@@ -209,7 +252,7 @@
   align-items: center;
   gap: 8px;
   border: 1px solid var(--color-accent);
-  background: rgba(255, 46, 46, 0.06);
+  background: #fff5f5;
   color: var(--color-accent);
   padding: 8px 12px;
   font-size: 12px;
@@ -221,4 +264,31 @@
   content: "⚠";
   font-size: 14px;
   line-height: 1;
+}
+
+@keyframes tableReveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes drawFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .table,
+  .leading {
+    animation: none !important;
+  }
 }

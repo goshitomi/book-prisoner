@@ -1,16 +1,19 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BookPanel } from "@/components/BookPanel/BookPanel";
 import { PrisonerPanel } from "@/components/PrisonerPanel/PrisonerPanel";
-import { Header } from "@/components/Header/Header";
 import { SearchBar } from "@/components/SearchBar/SearchBar";
 import { HoverSyncProvider } from "@/components/HoverSync/HoverSyncContext";
 import { SplitScreen, SplitScreenHandle } from "@/components/SplitScreen/SplitScreen";
 import { Pagination } from "@/components/Pagination/Pagination";
-import type { SearchResponse } from "@/lib/types";
+import { ReverseButton } from "@/components/ReverseButton/ReverseButton";
+import bookStyles from "@/components/BookPanel/BookPanel.module.css";
+import prisonerStyles from "@/components/PrisonerPanel/PrisonerPanel.module.css";
+import type { BookPrisonerPair, SearchResponse } from "@/lib/types";
 
 const DualCursor = dynamic(
   () => import("@/components/DualCursor/DualCursor").then((m) => m.DualCursor),
@@ -23,12 +26,58 @@ interface Props {
 
 const SWAP_STORAGE_KEY = "overdue.swapped";
 
+type SortDir = "asc" | "desc";
+
+const NUMERIC_KEYS = new Set([
+  "publicationYear",
+  "birthYear",
+  "pages",
+]);
+
+function getField(pair: BookPrisonerPair, key: string): string | null {
+  const b = pair.book as unknown as Record<string, unknown>;
+  const p = pair.prisoner as unknown as Record<string, unknown>;
+  const v = (b[key] ?? p[key]) as string | number | null | undefined;
+  if (v == null) return null;
+  return String(v);
+}
+
+function sortPairs(
+  pairs: BookPrisonerPair[],
+  key: string | null,
+  dir: SortDir,
+): BookPrisonerPair[] {
+  if (!key) return pairs;
+  const isNumeric = NUMERIC_KEYS.has(key);
+  const mult = dir === "asc" ? 1 : -1;
+  const decorated = pairs.map((p, i) => ({ p, i, v: getField(p, key) }));
+  decorated.sort((a, b) => {
+    const av = a.v;
+    const bv = b.v;
+    if (av == null && bv == null) return a.i - b.i;
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    let cmp: number;
+    if (isNumeric) {
+      const an = Number(av.replace(/[^0-9.-]/g, "")) || 0;
+      const bn = Number(bv.replace(/[^0-9.-]/g, "")) || 0;
+      cmp = an - bn;
+    } else {
+      cmp = av.localeCompare(bv, "ko");
+    }
+    return cmp !== 0 ? cmp * mult : a.i - b.i;
+  });
+  return decorated.map((d) => d.p);
+}
+
 export function LandingShell({ data }: Props) {
   const [swapped, setSwapped] = useState(false);
   const splitRef = useRef<SplitScreenHandle>(null);
   const router = useRouter();
   const params = useSearchParams();
   const [searchValue, setSearchValue] = useState(params.get("q") ?? "");
+  const [sortKey, setSortKey] = useState<string | null>(null);
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
 
   useEffect(() => {
     setSearchValue(params.get("q") ?? "");
@@ -61,12 +110,10 @@ export function LandingShell({ data }: Props) {
     });
   }, []);
 
-  // 스왑/페이지 전환 시 스크롤 리셋
   useEffect(() => {
     splitRef.current?.resetScroll();
   }, [swapped, data.page]);
 
-  // 탭 타이틀 타이프라이터 — 탭이 백그라운드일 때만 동작.
   useEffect(() => {
     const FULL = "Book as Prisoner";
     let pos = 0;
@@ -114,56 +161,97 @@ export function LandingShell({ data }: Props) {
     };
   }, []);
 
+  const onSort = useCallback((key: string) => {
+    setSortKey((prev) => {
+      if (prev === key) {
+        setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+        return prev;
+      }
+      setSortDir("asc");
+      return key;
+    });
+  }, []);
+
+  const sortedItems = useMemo(
+    () => sortPairs(data.items, sortKey, sortDir),
+    [data.items, sortKey, sortDir],
+  );
+
   const showCursor = process.env.NEXT_PUBLIC_ENABLE_DUAL_CURSOR !== "false";
 
-  const pagination = <Pagination page={data.page} totalPages={data.totalPages} />;
+  const leftPagination = <Pagination page={data.page} totalPages={data.totalPages} />;
+  const rightPagination = (
+    <Pagination
+      page={data.page}
+      totalPages={data.totalPages}
+      trailing={<ReverseButton swapped={swapped} onToggle={toggleSwap} />}
+    />
+  );
+
+  const bookLeading = (
+    <div className={bookStyles.leading}>
+      <h2 className={bookStyles.titleBlock}>
+        <Link href="/" className={bookStyles.titleLink} aria-label="홈으로">
+          List of Books
+        </Link>
+      </h2>
+      <SearchBar
+        value={searchValue}
+        onChange={setSearchValue}
+        onSubmit={submitSearch}
+        placeholder="Search a book"
+        ariaLabel="도서 검색"
+        examples={["Search a book", "Title, author, publisher...", "ISBN, keyword..."]}
+      />
+    </div>
+  );
+  const prisonerLeading = (
+    <div className={prisonerStyles.leading}>
+      <h2 className={prisonerStyles.titleBlock}>
+        <Link href="/" className={prisonerStyles.titleLink} aria-label="홈으로">
+          List of Prisoners
+        </Link>
+      </h2>
+      <SearchBar
+        value={searchValue}
+        onChange={setSearchValue}
+        onSubmit={submitSearch}
+        placeholder="Search an inmate"
+        ariaLabel="수감자 검색"
+        examples={["Search an inmate", "Name, ID number...", "수감자명, 수인번호..."]}
+      />
+    </div>
+  );
+
   const bookPanel = (
     <BookPanel
-      items={data.items}
+      items={sortedItems}
       isFallback={data.isFallback}
       fallbackReason={data.fallbackReason}
       query={data.query}
-      footer={pagination}
+      leading={bookLeading}
+      footer={swapped ? rightPagination : leftPagination}
+      sortKey={sortKey}
+      sortDir={sortDir}
+      onSort={onSort}
     />
   );
   const prisonerPanel = (
     <PrisonerPanel
-      items={data.items}
+      items={sortedItems}
       isFallback={data.isFallback}
       fallbackReason={data.fallbackReason}
       query={data.query}
-      footer={pagination}
-    />
-  );
-  const bookSearch = (
-    <SearchBar
-      value={searchValue}
-      onChange={setSearchValue}
-      onSubmit={submitSearch}
-      placeholder="Search a book"
-      ariaLabel="도서 검색"
-      examples={["Search a book", "Title, author, publisher...", "ISBN, keyword..."]}
-    />
-  );
-  const prisonerSearch = (
-    <SearchBar
-      value={searchValue}
-      onChange={setSearchValue}
-      onSubmit={submitSearch}
-      placeholder="Search an inmate"
-      ariaLabel="수감자 검색"
-      examples={["Search an inmate", "Name, ID number...", "수감자명, 수인번호..."]}
+      leading={prisonerLeading}
+      footer={swapped ? leftPagination : rightPagination}
+      sortKey={sortKey}
+      sortDir={sortDir}
+      onSort={onSort}
     />
   );
 
   return (
     <HoverSyncProvider>
-      <Header
-        swapped={swapped}
-        onToggleSwap={toggleSwap}
-        bookSearch={bookSearch}
-        prisonerSearch={prisonerSearch}
-      />
       <SplitScreen
         ref={splitRef}
         left={swapped ? prisonerPanel : bookPanel}
