@@ -6,7 +6,6 @@ import styles from "./Pagination.module.css";
 interface Props {
   page: number;
   totalPages: number;
-  side?: "left" | "right";
 }
 
 function getRange(current: number, total: number): (number | "…")[] {
@@ -21,7 +20,7 @@ function getRange(current: number, total: number): (number | "…")[] {
   return items;
 }
 
-export function Pagination({ page, totalPages, side = "left" }: Props) {
+export function Pagination({ page, totalPages }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -39,7 +38,7 @@ export function Pagination({ page, totalPages, side = "left" }: Props) {
 
   return (
     <nav
-      className={`${styles.root} ${side === "right" ? styles.rootRight : styles.rootLeft} allowSystemCursor`}
+      className={`${styles.root} allowSystemCursor`}
       aria-label="페이지 네비게이션"
     >
       <button

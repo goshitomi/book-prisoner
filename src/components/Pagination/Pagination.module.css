@@ -1,27 +1,15 @@
 .root {
-  position: fixed;
-  bottom: 20px;
-  z-index: 70;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 6px 14px;
-  background: #ffffff;
+  padding: 24px 14px 8px;
+  margin-top: 16px;
   color: #000000;
   font-family: var(--font-en);
   font-variant-numeric: tabular-nums;
   font-size: 12px;
   letter-spacing: 0.04em;
-}
-
-.rootLeft {
-  left: calc(100vw * var(--left-ratio) * 0.5);
-  transform: translateX(-50%);
-}
-
-.rootRight {
-  left: calc(100vw * var(--left-ratio) + (100vw * (1 - var(--left-ratio))) * 0.5);
-  transform: translateX(-50%);
 }
 
 .page {

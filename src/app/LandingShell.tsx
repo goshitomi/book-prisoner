@@ -102,20 +102,26 @@ export function LandingShell({ data }: Props) {
   const showCursor = process.env.NEXT_PUBLIC_ENABLE_DUAL_CURSOR !== "false";
 
   const bookPanel = (
-    <BookPanel
-      items={data.items}
-      isFallback={data.isFallback}
-      fallbackReason={data.fallbackReason}
-      query={data.query}
-    />
+    <>
+      <BookPanel
+        items={data.items}
+        isFallback={data.isFallback}
+        fallbackReason={data.fallbackReason}
+        query={data.query}
+      />
+      <Pagination page={data.page} totalPages={data.totalPages} />
+    </>
   );
   const prisonerPanel = (
-    <PrisonerPanel
-      items={data.items}
-      isFallback={data.isFallback}
-      fallbackReason={data.fallbackReason}
-      query={data.query}
-    />
+    <>
+      <PrisonerPanel
+        items={data.items}
+        isFallback={data.isFallback}
+        fallbackReason={data.fallbackReason}
+        query={data.query}
+      />
+      <Pagination page={data.page} totalPages={data.totalPages} />
+    </>
   );
 
   return (
@@ -129,8 +135,6 @@ export function LandingShell({ data }: Props) {
       <div aria-live="polite" style={{ position: "absolute", left: -9999, top: -9999 }}>
         {data.items.length}건 조회 완료
       </div>
-      <Pagination page={data.page} totalPages={data.totalPages} side="left" />
-      <Pagination page={data.page} totalPages={data.totalPages} side="right" />
       {showCursor && <DualCursor />}
     </>
   );
