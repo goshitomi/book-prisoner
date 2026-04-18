@@ -8,16 +8,16 @@ interface Props {
   totalPages: number;
 }
 
-function getRange(current: number, total: number): (number | "…")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-  const items: (number | "…")[] = [1];
-  const left = Math.max(2, current - 1);
-  const right = Math.min(total - 1, current + 1);
-  if (left > 2) items.push("…");
-  for (let i = left; i <= right; i++) items.push(i);
-  if (right < total - 1) items.push("…");
-  items.push(total);
-  return items;
+function getRange(current: number, total: number): number[] {
+  const window = 5;
+  if (total <= window) return Array.from({ length: total }, (_, i) => i + 1);
+  let start = Math.max(1, current - 2);
+  let end = start + window - 1;
+  if (end > total) {
+    end = total;
+    start = end - window + 1;
+  }
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 }
 
 export function Pagination({ page, totalPages }: Props) {
@@ -50,24 +50,18 @@ export function Pagination({ page, totalPages }: Props) {
       >
         ‹
       </button>
-      {range.map((item, i) =>
-        item === "…" ? (
-          <span key={`e${i}`} className={styles.ellipsis} aria-hidden="true">
-            …
-          </span>
-        ) : (
-          <button
-            key={item}
-            type="button"
-            className={`${styles.page} ${item === page ? styles.current : ""}`}
-            onClick={() => goto(item)}
-            aria-current={item === page ? "page" : undefined}
-            aria-label={`${item} 페이지${item === page ? " (현재)" : ""}`}
-          >
-            {item}
-          </button>
-        ),
-      )}
+      {range.map((item) => (
+        <button
+          key={item}
+          type="button"
+          className={`${styles.page} ${item === page ? styles.current : ""}`}
+          onClick={() => goto(item)}
+          aria-current={item === page ? "page" : undefined}
+          aria-label={`${item} 페이지${item === page ? " (현재)" : ""}`}
+        >
+          {item}
+        </button>
+      ))}
       <button
         type="button"
         className={`${styles.page} ${styles.arrow}`}

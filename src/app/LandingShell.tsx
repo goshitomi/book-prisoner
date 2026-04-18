@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BookPanel } from "@/components/BookPanel/BookPanel";
 import { PrisonerPanel } from "@/components/PrisonerPanel/PrisonerPanel";
@@ -24,6 +25,19 @@ const SWAP_STORAGE_KEY = "overdue.swapped";
 export function LandingShell({ data }: Props) {
   const [swapped, setSwapped] = useState(false);
   const splitRef = useRef<SplitScreenHandle>(null);
+  const router = useRouter();
+  const params = useSearchParams();
+  const [searchValue, setSearchValue] = useState(params.get("q") ?? "");
+
+  useEffect(() => {
+    setSearchValue(params.get("q") ?? "");
+  }, [params]);
+
+  const submitSearch = useCallback(() => {
+    const q = searchValue.trim();
+    if (q) router.push(`/?q=${encodeURIComponent(q)}`);
+    else router.push("/");
+  }, [router, searchValue]);
 
   useEffect(() => {
     try {
@@ -103,6 +117,13 @@ export function LandingShell({ data }: Props) {
 
   const bookPanel = (
     <>
+      <SearchBar
+        value={searchValue}
+        onChange={setSearchValue}
+        onSubmit={submitSearch}
+        placeholder="Search a book"
+        ariaLabel="도서 검색"
+      />
       <BookPanel
         items={data.items}
         isFallback={data.isFallback}
@@ -114,6 +135,13 @@ export function LandingShell({ data }: Props) {
   );
   const prisonerPanel = (
     <>
+      <SearchBar
+        value={searchValue}
+        onChange={setSearchValue}
+        onSubmit={submitSearch}
+        placeholder="Search an inmate"
+        ariaLabel="수감자 검색"
+      />
       <PrisonerPanel
         items={data.items}
         isFallback={data.isFallback}
@@ -126,7 +154,7 @@ export function LandingShell({ data }: Props) {
 
   return (
     <>
-      <Header swapped={swapped} onToggleSwap={toggleSwap} searchSlot={<SearchBar />} />
+      <Header swapped={swapped} onToggleSwap={toggleSwap} />
       <SplitScreen
         ref={splitRef}
         left={swapped ? prisonerPanel : bookPanel}

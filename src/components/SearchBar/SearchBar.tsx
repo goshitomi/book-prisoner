@@ -1,39 +1,40 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useRef } from "react";
 import styles from "./SearchBar.module.css";
 
-export function SearchBar() {
-  const router = useRouter();
-  const params = useSearchParams();
-  const [value, setValue] = useState(params.get("q") ?? "");
+interface Props {
+  value: string;
+  onChange: (v: string) => void;
+  onSubmit: () => void;
+  placeholder?: string;
+  ariaLabel?: string;
+}
+
+export function SearchBar({
+  value,
+  onChange,
+  onSubmit,
+  placeholder = "Search",
+  ariaLabel = "검색",
+}: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    setValue(params.get("q") ?? "");
-  }, [params]);
-
-  const onSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const q = value.trim();
-    if (q) {
-      router.push(`/?q=${encodeURIComponent(q)}`);
-    } else {
-      router.push("/");
-    }
+    onSubmit();
   };
 
   return (
-    <form className={styles.form} onSubmit={onSubmit} role="search">
+    <form className={styles.form} onSubmit={handleSubmit} role="search">
       <input
         ref={inputRef}
         className={styles.input}
         type="search"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Search"
-        aria-label="도서 검색"
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        aria-label={ariaLabel}
         spellCheck={false}
         autoComplete="off"
       />

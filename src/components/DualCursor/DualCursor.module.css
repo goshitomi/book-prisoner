@@ -2,14 +2,14 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   pointer-events: none;
   z-index: 9999;
-  /* macOS/Windows 기본 화살표 포인터를 모방한 SVG. tip 좌측 상단(0,0). */
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M2 1 L2 17 L6 13 L9 19 L11 18 L8 12 L14 12 Z' fill='black' stroke='white' stroke-width='1' stroke-linejoin='round'/></svg>");
+  /* macOS 시스템 화살표를 모방. tip은 (1.5, 1)로 화살표 끝이 좌표와 정확히 일치. */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><path d='M1.5 1 L1.5 17.5 L5.5 13.5 L8.2 19.5 L10.5 18.6 L7.9 12.7 L13.5 12.7 Z' fill='black' stroke='white' stroke-width='1.2' stroke-linejoin='round' stroke-linecap='round'/></svg>");
   background-repeat: no-repeat;
-  background-size: 20px 20px;
+  background-size: 22px 22px;
   background-position: 0 0;
   margin: -1px 0 0 -2px;
   will-change: transform, opacity;

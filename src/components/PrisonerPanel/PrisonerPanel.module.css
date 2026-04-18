@@ -1,5 +1,5 @@
 .root {
-  padding: 80px 24px 24px;
+  padding: 24px 24px 24px;
   min-height: 100vh;
   background: var(--color-prisoner-bg);
   color: var(--color-prisoner-fg);
@@ -52,7 +52,7 @@
 
 .table tbody td {
   padding: 10px 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid #000000;
   vertical-align: top;
   word-break: keep-all;
   overflow-wrap: break-word;

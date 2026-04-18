@@ -1,8 +1,6 @@
 .form {
   display: flex;
-  flex: 1;
-  max-width: 360px;
-  margin: 0 auto;
+  padding: 56px 24px 0;
 }
 
 .input {

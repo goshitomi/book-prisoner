@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import { Header } from "@/components/Header/Header";
-import { SearchBar } from "@/components/SearchBar/SearchBar";
 import { SplitScreen } from "@/components/SplitScreen/SplitScreen";
 import { LoanCompleteOverlay } from "@/components/LoanCompleteOverlay/LoanCompleteOverlay";
 import { DetailBookSide } from "./DetailBookSide";
@@ -50,7 +49,7 @@ export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
 
   return (
     <>
-      <Header swapped={swapped} onToggleSwap={toggleSwap} searchSlot={<SearchBar />} />
+      <Header swapped={swapped} onToggleSwap={toggleSwap} />
       {(() => {
         const bookSide = (
           <DetailBookSide
