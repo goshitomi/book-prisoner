@@ -86,13 +86,16 @@ async function loadSearch(query: string | null, page: number): Promise<SearchRes
       return { book, prisoner };
     });
 
+    // 홈(쿼리 없음)은 5페이지까지만 표시 — 그 이후 NL API가 빈 결과/에러를 자주 반환.
+    // 검색은 호출 가능한 모든 페이지(MAX_PAGES) 허용.
+    const pageCap = query ? MAX_PAGES : 5;
     const displayableTotal = Math.min(
       total || pairs.length,
-      PAGE_SIZE * MAX_PAGES,
+      PAGE_SIZE * pageCap,
     );
     const totalPages = Math.min(
       Math.max(1, Math.ceil(displayableTotal / PAGE_SIZE)),
-      MAX_PAGES,
+      pageCap,
     );
 
     const response: SearchResponse = {

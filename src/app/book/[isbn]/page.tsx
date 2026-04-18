@@ -4,7 +4,7 @@ import { fetchSeojiBatch } from "@/lib/api/nlSeoji";
 import { fetchBookEnrichment } from "@/lib/api/data4library";
 import { kvGet, kvSet } from "@/lib/cache/kv";
 import { mapBookToPrisoner, normalizeBook } from "@/lib/mapBookToPrisoner";
-import { sanitizeIsbn } from "@/lib/utils/isbn";
+import { extractIsbn13, sanitizeIsbn } from "@/lib/utils/isbn";
 import fallbackData from "@/lib/fallback/prisoners.json";
 import { CACHE_TTL } from "@/lib/constants";
 import type { BookPrisonerPair } from "@/lib/types";
@@ -18,8 +18,11 @@ async function loadPair(isbn: string): Promise<BookPrisonerPair | null> {
   if (cached) return cached;
 
   try {
-    const { items } = await searchNL({ isbn, pageNum: 1, pageSize: 1 });
-    const raw = items[0];
+    // NL API의 isbnCode 검색은 동일 ISBN 문자열을 가진 여러 판본을 반환할 수 있고,
+    // 첫 번째 결과가 클릭한 책과 다른 경우가 있다. 충분히 가져온 뒤 ISBN 정확 일치하는 항목 선택.
+    const { items } = await searchNL({ isbn, pageNum: 1, pageSize: 10 });
+    const raw =
+      items.find((item) => extractIsbn13(item.isbn) === isbn) ?? items[0];
     if (!raw) {
       const fallback = (fallbackData as BookPrisonerPair[]).find(
         (p) => p.book.isbn13 === isbn,

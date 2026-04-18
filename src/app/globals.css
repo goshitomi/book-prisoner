@@ -1,3 +1,5 @@
+@import url("https://fonts.cdnfonts.com/css/times-new-roman");
+
 :root {
   --color-book-bg: #ffffff;
   --color-book-fg: #000000;
@@ -11,7 +13,7 @@
   --split-line-width: 6px;
 
   --font-ko: "Noto Sans KR", "Noto Sans CJK KR", system-ui, -apple-system, sans-serif;
-  --font-en: "Univers Next Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-en: "Times New Roman", "Times", "Liberation Serif", serif;
 }
 
 * {

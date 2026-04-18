@@ -9,6 +9,8 @@ export function DualCursor() {
   const ghostRef = useRef<HTMLDivElement>(null);
   const mouse = useRef({ x: -9999, y: -9999 });
   const overInteractive = useRef(false);
+  const overText = useRef(false);
+  const pressed = useRef(false);
   const rafId = useRef<number | null>(null);
 
   useEffect(() => {
@@ -16,17 +18,28 @@ export function DualCursor() {
     if (window.matchMedia("(hover: none)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    const isTextNode = (el: HTMLElement | null): boolean => {
+      if (!el) return false;
+      // td/th/p/dd/dt/span 등 텍스트 컨테이너 위에 있으면 I-beam로 판정.
+      return !!el.closest("td, th, p, dd, dt, span, h1, h2, h3, h4, li, blockquote, label, figcaption");
+    };
+
     const onMove = (e: MouseEvent) => {
       mouse.current.x = e.clientX;
       mouse.current.y = e.clientY;
       const t = e.target as HTMLElement | null;
       overInteractive.current = !!t?.closest("button, a, input, [role='separator']");
+      overText.current = !overInteractive.current && isTextNode(t);
     };
     const onLeave = () => { mouse.current.x = -9999; };
+    const onDown = () => { pressed.current = true; };
+    const onUp = () => { pressed.current = false; };
 
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseleave", onLeave);
     document.addEventListener("mouseleave", onLeave);
+    window.addEventListener("mousedown", onDown);
+    window.addEventListener("mouseup", onUp);
 
     const tick = () => {
       const ghost = ghostRef.current;
@@ -59,6 +72,8 @@ export function DualCursor() {
 
       ghost.style.opacity = "1";
       ghost.style.transform = `translate3d(${xGhost}px, ${yGhost}px, 0)`;
+      ghost.dataset.pressed = pressed.current ? "1" : "0";
+      ghost.dataset.text = overText.current ? "1" : "0";
       rafId.current = requestAnimationFrame(tick);
     };
     rafId.current = requestAnimationFrame(tick);
@@ -67,9 +82,11 @@ export function DualCursor() {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseleave", onLeave);
       document.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("mousedown", onDown);
+      window.removeEventListener("mouseup", onUp);
       if (rafId.current != null) cancelAnimationFrame(rafId.current);
     };
   }, []);
 
-  return <div ref={ghostRef} className={styles.ghost} aria-hidden="true" />;
+  return <div ref={ghostRef} className={styles.ghost} aria-hidden="true" data-pressed="0" data-text="0" />;
 }

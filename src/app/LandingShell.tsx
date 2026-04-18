@@ -142,6 +142,7 @@ export function LandingShell({ data }: Props) {
       placeholder="Search a book"
       ariaLabel="도서 검색"
       side={swapped ? "right" : "left"}
+      examples={["Search a book", "Title, author, publisher...", "ISBN, keyword...", "한국사", "민주주의"]}
     />
   );
   const prisonerSearch = (
@@ -152,6 +153,7 @@ export function LandingShell({ data }: Props) {
       placeholder="Search an inmate"
       ariaLabel="수감자 검색"
       side={swapped ? "left" : "right"}
+      examples={["Search an inmate", "Name, ID number...", "수감자명, 수인번호..."]}
     />
   );
 
