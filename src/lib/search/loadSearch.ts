@@ -1,6 +1,9 @@
 import { searchNL, fetchNLNewBooks } from "@/lib/api/nl";
 import { fetchSeojiBatch } from "@/lib/api/nlSeoji";
-import { fetchBookEnrichment } from "@/lib/api/data4library";
+import {
+  fetchBookEnrichment,
+  fetchPopularDesignBooks,
+} from "@/lib/api/data4library";
 import { kvGet, kvSet } from "@/lib/cache/kv";
 import { mapBookToPrisoner, normalizeBook } from "@/lib/mapBookToPrisoner";
 import { extractIsbn13, isIsbnLike, sanitizeIsbn } from "@/lib/utils/isbn";
@@ -14,7 +17,12 @@ import type {
 } from "@/lib/types";
 
 // 캐시 키 버전은 이 파일에서 단일 관리. 스키마 변경 시 CACHE_VERSION만 올리면 전사 무효화.
-const CACHE_VERSION = "v3";
+// v4: 랜딩을 디자인 인기 대출 도서로 교체 + 페이지당 30건 엄수.
+const CACHE_VERSION = "v4";
+
+// 과다 필터링(비도서/중복/ISBN 누락)에 대비한 오버페치 비율.
+// NL 검색 pageSize 상한은 100이므로 PAGE_SIZE * 1.7 ≈ 51 으로 안전.
+const OVERFETCH_MULTIPLIER = 1.7;
 
 function dedupByIsbn(items: NLRawItem[]): NLRawItem[] {
   const seen = new Set<string>();
@@ -47,26 +55,39 @@ export async function loadSearch(
 
     if (query) {
       const isbn = isIsbnLike(query) ? extractIsbn13(query) : undefined;
+      // ISBN 조회는 결과 수가 적으므로 오버페치 불필요.
+      const fetchSize = isbn
+        ? PAGE_SIZE
+        : Math.min(Math.ceil(PAGE_SIZE * OVERFETCH_MULTIPLIER), 100);
       const result = await searchNL({
         query: isbn ? undefined : query,
         isbn,
         pageNum: page,
-        pageSize: PAGE_SIZE,
+        pageSize: fetchSize,
       });
       skeleton = result.items;
       total = result.total;
 
       if (skeleton.length === 0) {
-        const fb = await fetchNLNewBooks(PAGE_SIZE, page);
+        const fb = await fetchPopularDesignBooks(PAGE_SIZE, page);
         skeleton = fb.items;
         total = fb.total;
         isFallback = true;
         fallbackReason = "empty_result";
       }
     } else {
-      const fb = await fetchNLNewBooks(PAGE_SIZE, page);
+      // 홈(1-5 페이지): 디자인 인기 대출 도서.
+      // data4library 가 응답하지 않으면 catch 에서 로컬 fallback 으로 폴스루.
+      const fb = await fetchPopularDesignBooks(PAGE_SIZE, page);
       skeleton = fb.items;
       total = fb.total;
+
+      // 인기 대출 API 가 빈 결과를 돌려주면 기존 NL 신착으로 폴백 (완전한 공백 방지).
+      if (skeleton.length === 0) {
+        const nlFb = await fetchNLNewBooks(PAGE_SIZE, page);
+        skeleton = nlFb.items;
+        total = nlFb.total;
+      }
     }
 
     skeleton = dedupByIsbn(skeleton);
@@ -77,6 +98,11 @@ export async function loadSearch(
       const i = extractIsbn13(raw.isbn);
       return !!i && i.length === 13;
     });
+
+    // 오버페치 결과를 정확히 PAGE_SIZE 로 트림 — 페이지당 30건 보장.
+    if (skeleton.length > PAGE_SIZE) {
+      skeleton = skeleton.slice(0, PAGE_SIZE);
+    }
 
     const isbns = skeleton
       .map((b) => extractIsbn13(b.isbn))

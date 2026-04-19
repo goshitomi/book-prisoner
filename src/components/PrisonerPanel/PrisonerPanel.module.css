@@ -34,7 +34,10 @@
 
 .table {
   width: 100%;
-  border-collapse: collapse;
+  /* sticky th + 두꺼운 검은 테두리를 유지하려면 separate + border-spacing 0 필요.
+     collapse 모드에서는 테두리가 인접 셀과 공유되어 스크롤 시 헤더 하단선이 깨질 수 있음. */
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 12px;
   table-layout: fixed;
   color: #000000;
@@ -55,13 +58,17 @@
   color: #000000;
   cursor: pointer;
   user-select: none;
+  /* separate 모드에서는 각 셀의 4면 테두리를 직접 지정.
+     top/bottom은 헤더 가장자리 두꺼운 선, right은 컬럼 구분선. */
   border-top: 6px solid #000000;
   border-bottom: 6px solid #000000;
   border-right: 6px solid #000000;
+  border-left: none;
   overflow: hidden;
   position: sticky;
   top: 0;
-  z-index: 20;
+  /* 스크롤되는 데이터 행보다 반드시 위에 그려져야 함. */
+  z-index: 30;
   background: var(--color-prisoner-bg, #ffffff);
   background-clip: padding-box;
 }
