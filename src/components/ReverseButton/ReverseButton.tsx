@@ -18,8 +18,8 @@ export function ReverseButton({ swapped, onToggle }: Props) {
       title="Reverse"
     >
       <svg
-        width="20"
-        height="20"
+        width="14"
+        height="14"
         viewBox="0 0 20 20"
         fill="none"
         aria-hidden="true"

@@ -23,6 +23,16 @@ export function useSplitRatio(initial = 0.5) {
     document.documentElement.style.setProperty("--left-ratio", String(ratio));
   }, [ratio]);
 
+  // 자동 인터랙션(가상 커서)에서 분할 비율을 직접 조작할 수 있도록 커스텀 이벤트 수신.
+  useEffect(() => {
+    const onAuto = (e: Event) => {
+      const detail = (e as CustomEvent<number>).detail;
+      if (typeof detail === "number" && Number.isFinite(detail)) setRatio(detail);
+    };
+    window.addEventListener("autocursor:setratio", onAuto as EventListener);
+    return () => window.removeEventListener("autocursor:setratio", onAuto as EventListener);
+  }, [setRatio]);
+
   useEffect(() => {
     const handle = handleRef.current;
     if (!handle) return;

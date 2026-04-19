@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { AutoCursorClient } from "@/components/AutoCursor/AutoCursorClient";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           본문으로 건너뛰기
         </a>
         <main id="main">{children}</main>
+        <AutoCursorClient />
       </body>
     </html>
   );

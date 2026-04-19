@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 import { SplitScreen } from "@/components/SplitScreen/SplitScreen";
 import { ReverseButton } from "@/components/ReverseButton/ReverseButton";
@@ -9,11 +8,6 @@ import { DetailBookSide } from "./DetailBookSide";
 import { DetailPrisonerSide } from "./DetailPrisonerSide";
 import type { BookPrisonerPair } from "@/lib/types";
 import styles from "./Detail.module.css";
-
-const DualCursor = dynamic(
-  () => import("@/components/DualCursor/DualCursor").then((m) => m.DualCursor),
-  { ssr: false },
-);
 
 const SWAP_STORAGE_KEY = "overdue.swapped";
 
@@ -43,8 +37,6 @@ export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
   const onRequest = () => setOverlayOpen(true);
   const onClose = () => setOverlayOpen(false);
 
-  const showCursor = process.env.NEXT_PUBLIC_ENABLE_DUAL_CURSOR === "true";
-
   const bookSide = <DetailBookSide pair={pair} onRequest={onRequest} />;
   const prisonerSide = <DetailPrisonerSide pair={pair} onRequest={onRequest} />;
 
@@ -62,7 +54,6 @@ export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
       {overlayOpen && (
         <LoanCompleteOverlay pair={pair} swapped={swapped} onClose={onClose} />
       )}
-      {showCursor && !overlayOpen && <DualCursor />}
     </>
   );
 }

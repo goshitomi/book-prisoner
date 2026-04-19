@@ -9,9 +9,8 @@ import {
   type ReactNode,
 } from "react";
 
-// 좌/우 패널 간에 호버 상태를 공유한다.
-// 가짜 커서(DualCursor)는 시각적인 div일 뿐이라 브라우저의 :hover를 트리거하지 못하므로,
-// 실제 마우스가 속한 패널의 행 인덱스를 React state로 공유하여 반대 패널에도 같은 효과를 준다.
+// 좌/우 패널 간에 호버 상태를 공유한다. 한쪽에서 마우스가 행에 들어오면
+// 반대 패널의 동일 인덱스 행에도 같은 호버 효과를 적용한다.
 type Updater = string | null | ((cur: string | null) => string | null);
 
 interface HoverSyncValue {

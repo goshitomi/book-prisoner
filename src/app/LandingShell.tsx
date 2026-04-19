@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -14,11 +13,6 @@ import { ReverseButton } from "@/components/ReverseButton/ReverseButton";
 import bookStyles from "@/components/BookPanel/BookPanel.module.css";
 import prisonerStyles from "@/components/PrisonerPanel/PrisonerPanel.module.css";
 import type { BookPrisonerPair, SearchResponse } from "@/lib/types";
-
-const DualCursor = dynamic(
-  () => import("@/components/DualCursor/DualCursor").then((m) => m.DualCursor),
-  { ssr: false },
-);
 
 interface Props {
   data: SearchResponse;
@@ -188,9 +182,6 @@ export function LandingShell({ data }: Props) {
     [data.items, sortKey, sortDir],
   );
 
-  // 듀얼 커서는 좌/우 모양이 태생적으로 일치하지 않으므로 기본 OFF. 전시 환경에서만 env로 opt-in.
-  const showCursor = process.env.NEXT_PUBLIC_ENABLE_DUAL_CURSOR === "true";
-
   const leftPagination = <Pagination page={data.page} totalPages={data.totalPages} />;
   const rightPagination = (
     <Pagination
@@ -284,7 +275,6 @@ export function LandingShell({ data }: Props) {
       <div aria-live="polite" style={{ position: "absolute", left: -9999, top: -9999 }}>
         {data.items.length}건 조회 완료
       </div>
-      {showCursor && <DualCursor />}
     </HoverSyncProvider>
   );
 }
