@@ -7,6 +7,14 @@
 }
 
 @font-face {
+  font-family: "PanamaMono";
+  src: url("/fonts/Panama-MonoBold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Pyeonsan";
   src: url("/fonts/Pyeonsan-BetaB.woff") format("woff");
   font-weight: 400;
@@ -21,14 +29,13 @@
   --color-prisoner-fg: #000000;
   --color-ink: #000000;
   --color-accent: #ff2e2e;
-  --color-muted: #8a8a8a;
 
   --left-ratio: 0.5;
   --split-line-width: 12px;
-  --header-height: 96px;
 
   --font-ko: "Pyeonsan", "Noto Sans KR", "Noto Sans CJK KR", system-ui, -apple-system, sans-serif;
-  --font-en: "Panama", "Times New Roman", "Times", "Liberation Serif", serif;
+  --font-en: "Panama", "Times New Roman", "Times", "Pyeonsan", "Noto Sans KR", "Liberation Serif", serif;
+  --font-mono: "PanamaMono", "Panama", ui-monospace, Menlo, monospace;
 }
 
 * {
@@ -41,14 +48,16 @@ body {
   padding: 0;
   height: 100vh;
   overflow: hidden;
+  color: #000000;
 }
 
 body {
-  font-family: var(--font-ko), var(--font-en);
+  font-family: var(--font-ko);
   font-weight: 500;
   font-size: 12px;
   line-height: 1.5;
   letter-spacing: -0.01em;
+  color: #000000;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -114,12 +123,6 @@ html {
 *::-webkit-scrollbar {
   width: 0;
   height: 0;
-  background: transparent;
-}
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
-*::-webkit-scrollbar-thumb {
   background: transparent;
 }
 

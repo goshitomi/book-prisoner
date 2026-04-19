@@ -201,7 +201,13 @@ export function LandingShell({ data }: Props) {
         onSubmit={submitSearch}
         placeholder="Search a book"
         ariaLabel="도서 검색"
-        examples={["Search a book", "Title, author, publisher...", "ISBN, keyword..."]}
+        examples={[
+          "Search a book",
+          "표제, 저자...",
+          "ISBN",
+          "청구기호",
+          "판형",
+        ]}
       />
     </div>
   );
@@ -218,7 +224,13 @@ export function LandingShell({ data }: Props) {
         onSubmit={submitSearch}
         placeholder="Search an inmate"
         ariaLabel="수감자 검색"
-        examples={["Search an inmate", "Name, ID number...", "수감자명, 수인번호..."]}
+        examples={[
+          "Search an inmate",
+          "이름, 공범...",
+          "ID Number",
+          "수인번호",
+          "키/몸무게",
+        ]}
       />
     </div>
   );

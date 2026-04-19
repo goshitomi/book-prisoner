@@ -25,26 +25,25 @@
   background: #000000;
   pointer-events: none;
   z-index: 90;
+  transform: translateX(-50%);
   transform-origin: top;
-  animation: drawSplit 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
-  will-change: transform, width;
+  animation: drawSplit 1.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  transition: width 0.22s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: width;
 }
 
 @keyframes drawSplit {
   from {
-    transform: translateX(calc(var(--split-line-width) * -0.5)) scaleY(0);
+    transform: translateX(-50%) scaleY(0);
   }
   to {
-    transform: translateX(calc(var(--split-line-width) * -0.5)) scaleY(1);
+    transform: translateX(-50%) scaleY(1);
   }
 }
 
 .root:has(.handle:hover) .splitLine,
 .root:has(.handle.dragging) .splitLine {
-  width: 16px;
-  animation: none;
-  transform: translateX(-50%) scaleY(1);
-  transition: width 0.15s ease-out, transform 0.15s ease-out;
+  width: 18px;
 }
 
 .handle {

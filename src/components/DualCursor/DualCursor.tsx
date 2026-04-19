@@ -5,11 +5,10 @@ import styles from "./DualCursor.module.css";
 
 // 상대 좌표 매핑 방식. 마우스가 속한 패널 내 상대 위치(%)를 반대 패널에 투영.
 // 스크롤 오프셋 보정: y_ghost = mouseY + (other.scrollTop - active.scrollTop).
+// 고스트 커서 모양은 실제 마우스 위치가 아닌 "고스트 위치"의 요소를 기준으로 결정.
 export function DualCursor() {
   const ghostRef = useRef<HTMLDivElement>(null);
   const mouse = useRef({ x: -9999, y: -9999 });
-  const overInteractive = useRef(false);
-  const overText = useRef(false);
   const pressed = useRef(false);
   const rafId = useRef<number | null>(null);
 
@@ -18,18 +17,18 @@ export function DualCursor() {
     if (window.matchMedia("(hover: none)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const isTextNode = (el: HTMLElement | null): boolean => {
+    const isTextNode = (el: Element | null): boolean => {
       if (!el) return false;
-      // td/th/p/dd/dt/span 등 텍스트 컨테이너 위에 있으면 I-beam로 판정.
       return !!el.closest("td, th, p, dd, dt, span, h1, h2, h3, h4, li, blockquote, label, figcaption");
+    };
+    const isInteractive = (el: Element | null): boolean => {
+      if (!el) return false;
+      return !!el.closest("button, a, input, [role='separator']");
     };
 
     const onMove = (e: MouseEvent) => {
       mouse.current.x = e.clientX;
       mouse.current.y = e.clientY;
-      const t = e.target as HTMLElement | null;
-      overInteractive.current = !!t?.closest("button, a, input, [role='separator']");
-      overText.current = !overInteractive.current && isTextNode(t);
     };
     const onLeave = () => { mouse.current.x = -9999; };
     const onDown = () => { pressed.current = true; };
@@ -46,7 +45,7 @@ export function DualCursor() {
       if (!ghost) { rafId.current = requestAnimationFrame(tick); return; }
 
       const { x, y } = mouse.current;
-      if (x < 0 || overInteractive.current) {
+      if (x < 0) {
         ghost.style.opacity = "0";
         rafId.current = requestAnimationFrame(tick);
         return;
@@ -70,10 +69,20 @@ export function DualCursor() {
         ? W_left + (x / W_left) * W_right
         : ((x - W_left) / W_right) * W_left;
 
+      const targetEl = document.elementFromPoint(xGhost, yGhost);
+      const ghostInteractive = isInteractive(targetEl);
+      const ghostText = !ghostInteractive && isTextNode(targetEl);
+
+      if (ghostInteractive) {
+        ghost.style.opacity = "0";
+        rafId.current = requestAnimationFrame(tick);
+        return;
+      }
+
       ghost.style.opacity = "1";
       ghost.style.transform = `translate3d(${xGhost}px, ${yGhost}px, 0)`;
       ghost.dataset.pressed = pressed.current ? "1" : "0";
-      ghost.dataset.text = overText.current ? "1" : "0";
+      ghost.dataset.text = ghostText ? "1" : "0";
       rafId.current = requestAnimationFrame(tick);
     };
     rafId.current = requestAnimationFrame(tick);
