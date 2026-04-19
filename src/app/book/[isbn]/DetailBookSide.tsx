@@ -1,56 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import type { BookPrisonerPair } from "@/lib/types";
-import { toProxied } from "@/lib/utils/imageProxy";
 import styles from "./Detail.module.css";
 
 interface Props {
   pair: BookPrisonerPair;
-  imageHover: null | "book" | "prisoner";
-  onImageEnter: () => void;
-  onImageLeave: () => void;
   onRequest: () => void;
 }
 
-export function DetailBookSide({
-  pair,
-  imageHover,
-  onImageEnter,
-  onImageLeave,
-  onRequest,
-}: Props) {
+export function DetailBookSide({ pair, onRequest }: Props) {
   const { book } = pair;
-  const [imgOk, setImgOk] = useState(true);
-  const proxied = toProxied(book.imageUrl);
-  const inverted = imageHover === "prisoner";
 
   return (
     <div className={styles.root}>
       <div>
         <p className={styles.kicker}>BOOK INFORMATION</p>
         <h1 className={styles.title}>{book.title}</h1>
-        <p className={styles.subtitle}>{book.authors}</p>
-
-        <figure
-          className={`${styles.imageWrap} ${styles.imageBook} ${inverted ? styles.invert : ""}`}
-          onMouseEnter={onImageEnter}
-          onMouseLeave={onImageLeave}
-        >
-          {proxied && imgOk ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={proxied}
-              alt={`${book.title} 표지`}
-              onError={() => setImgOk(false)}
-              loading="lazy"
-            />
-          ) : (
-            <div className={styles.imagePlaceholder}>표지 미등록</div>
-          )}
-          <figcaption className={styles.imageCaption}>HOVER → 좌우 명·암 반전</figcaption>
-        </figure>
 
         <dl className={styles.spec}>
           <dt>표제</dt>

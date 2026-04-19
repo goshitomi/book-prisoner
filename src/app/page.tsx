@@ -26,8 +26,8 @@ function dedupByIsbn(items: NLRawItem[]): NLRawItem[] {
 
 async function loadSearch(query: string | null, page: number): Promise<SearchResponse> {
   const cacheKey = query
-    ? `v2:search:${encodeURIComponent(query)}:${page}`
-    : `v2:newbooks:${page}`;
+    ? `v3:search:${encodeURIComponent(query)}:${page}`
+    : `v3:newbooks:${page}`;
   const cached = await kvGet<SearchResponse>(cacheKey);
   if (cached) return cached;
 

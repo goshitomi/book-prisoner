@@ -1,56 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import type { BookPrisonerPair } from "@/lib/types";
-import { toProxied } from "@/lib/utils/imageProxy";
 import styles from "./Detail.module.css";
 
 interface Props {
   pair: BookPrisonerPair;
-  imageHover: null | "book" | "prisoner";
-  onImageEnter: () => void;
-  onImageLeave: () => void;
   onRequest: () => void;
 }
 
-export function DetailPrisonerSide({
-  pair,
-  imageHover,
-  onImageEnter,
-  onImageLeave,
-  onRequest,
-}: Props) {
+export function DetailPrisonerSide({ pair, onRequest }: Props) {
   const { prisoner } = pair;
-  const [imgOk, setImgOk] = useState(true);
-  const proxied = toProxied(prisoner.mugshot);
-  const inverted = imageHover === "book";
 
   return (
     <div className={styles.root}>
       <div>
         <p className={styles.kicker}>INMATE PROFILE</p>
         <h1 className={styles.title}>{prisoner.name}</h1>
-        <p className={styles.subtitle}>{prisoner.coConspirators}</p>
-
-        <figure
-          className={`${styles.imageWrap} ${styles.imagePrisoner} ${inverted ? styles.invert : ""}`}
-          onMouseEnter={onImageEnter}
-          onMouseLeave={onImageLeave}
-        >
-          {proxied && imgOk ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={proxied}
-              alt={`${prisoner.name} 수감 사진`}
-              onError={() => setImgOk(false)}
-              loading="lazy"
-            />
-          ) : (
-            <div className={styles.imagePlaceholder}>사진 미등록 / PHOTO UNAVAILABLE</div>
-          )}
-          <figcaption className={styles.imageCaption}>HOVER → 좌우 명·암 반전</figcaption>
-        </figure>
 
         <dl className={styles.spec}>
           <dt>수감자</dt>

@@ -20,7 +20,6 @@ const SWAP_STORAGE_KEY = "overdue.swapped";
 export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
   const [swapped, setSwapped] = useState(false);
   const [overlayOpen, setOverlayOpen] = useState(false);
-  const [imageHover, setImageHover] = useState<null | "book" | "prisoner">(null);
 
   useEffect(() => {
     try {
@@ -48,24 +47,8 @@ export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
 
   const showCursor = process.env.NEXT_PUBLIC_ENABLE_DUAL_CURSOR !== "false";
 
-  const bookSide = (
-    <DetailBookSide
-      pair={pair}
-      imageHover={imageHover}
-      onImageEnter={() => setImageHover("book")}
-      onImageLeave={() => setImageHover(null)}
-      onRequest={onRequest}
-    />
-  );
-  const prisonerSide = (
-    <DetailPrisonerSide
-      pair={pair}
-      imageHover={imageHover}
-      onImageEnter={() => setImageHover("prisoner")}
-      onImageLeave={() => setImageHover(null)}
-      onRequest={onRequest}
-    />
-  );
+  const bookSide = <DetailBookSide pair={pair} onRequest={onRequest} />;
+  const prisonerSide = <DetailPrisonerSide pair={pair} onRequest={onRequest} />;
 
   return (
     <>

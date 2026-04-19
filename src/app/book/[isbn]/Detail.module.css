@@ -22,91 +22,9 @@
   font-size: 22px;
   line-height: 1.25;
   letter-spacing: -0.01em;
-  margin: 0 0 6px;
+  margin: 0 0 32px;
   color: #000000;
   word-break: keep-all;
-}
-
-.subtitle {
-  font-family: var(--font-ko);
-  font-size: 13px;
-  color: #000000;
-  margin: 0 0 28px;
-}
-
-.imageWrap {
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  max-width: 360px;
-  margin: 0 0 32px;
-  background: #f2f2f2;
-  border: 1px solid #000000;
-  position: relative;
-  overflow: hidden;
-}
-
-.imageCaption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 6px 10px;
-  font-family: var(--font-en);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-align: center;
-  color: #ffffff;
-  background: #000000;
-  opacity: 0;
-  transform: translateY(100%);
-  transition: opacity 0.16s ease-out, transform 0.16s ease-out;
-  pointer-events: none;
-}
-
-.imageWrap:hover .imageCaption {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.imageWrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: filter 0.25s ease-out;
-}
-
-.imageBook img {
-  filter: grayscale(100%) contrast(110%);
-}
-.imageBook.invert img {
-  filter: grayscale(100%) invert(100%) contrast(120%);
-}
-
-.imagePrisoner img {
-  filter: grayscale(100%) invert(100%) contrast(120%);
-}
-.imagePrisoner.invert img {
-  filter: grayscale(100%) contrast(110%);
-}
-
-.imagePlaceholder {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-ko);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  color: #000000;
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 10px,
-    #e8e8e8 10px,
-    #e8e8e8 11px
-  );
 }
 
 .spec {

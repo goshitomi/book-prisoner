@@ -38,7 +38,7 @@ export const CACHE_TTL = {
   IMAGE: 604800,
 } as const;
 
-export const PAGE_SIZE = 20 as const;
+export const PAGE_SIZE = 30 as const;
 export const MAX_PAGES = 50 as const;
 
 // 도서관 ↔ 교도소 용어 사전. 어휘의 단일 진실 공급원.

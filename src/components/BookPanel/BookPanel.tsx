@@ -4,7 +4,6 @@ import { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import type { BookPrisonerPair } from "@/lib/types";
 import { useHoverSync } from "@/components/HoverSync/HoverSyncContext";
-import { toProxied } from "@/lib/utils/imageProxy";
 import styles from "./BookPanel.module.css";
 
 export type BookSortKey =
@@ -96,7 +95,6 @@ export function BookPanel({
             const rowKey = book.isbn13 || book.callNo || `${book.title}-${idx}`;
             const onActivate = () => book.isbn13 && router.push(`/book/${book.isbn13}`);
             const isHovered = hoveredKey === rowKey;
-            const proxied = toProxied(book.imageUrl);
             return (
               <tbody
                 key={rowKey}
@@ -125,61 +123,35 @@ export function BookPanel({
                 <tr className={styles.detail} aria-hidden="true">
                   <td colSpan={6}>
                     <div className={styles.fold}>
-                      <div className={styles.foldMeta}>
-                        <div className={styles.foldTop}>
-                          <dl>
-                            <dt>표제</dt>
-                            <dd>{book.title || "—"}</dd>
-                            <dt>저자</dt>
-                            <dd>{book.authors || "—"}</dd>
-                            <dt>출판사</dt>
-                            <dd>{book.publisher || "—"}</dd>
-                            <dt>발행일</dt>
-                            <dd>{book.publicationYear || "—"}</dd>
-                            <dt>발행지</dt>
-                            <dd>{book.publishPlace || "—"}</dd>
-                            <dt>청구기호</dt>
-                            <dd>{book.callNo || "—"}</dd>
-                          </dl>
-                        </div>
-                        <div className={styles.foldBottom}>
-                          <dl>
-                            <dt>ISBN</dt>
-                            <dd>{book.isbn13 || "—"}</dd>
-                            <dt>판형</dt>
-                            <dd>{book.form || "—"}</dd>
-                            <dt>페이지</dt>
-                            <dd>{book.pages ? `${book.pages} p.` : "—"}</dd>
-                            <dt>입고날짜</dt>
-                            <dd>{book.registrationDate || "—"}</dd>
-                            <dt>언어</dt>
-                            <dd>{book.language || "—"}</dd>
-                          </dl>
-                        </div>
+                      <div className={styles.foldTop}>
+                        <dl>
+                          <dt>표제</dt>
+                          <dd>{book.title || "—"}</dd>
+                          <dt>저자</dt>
+                          <dd>{book.authors || "—"}</dd>
+                          <dt>출판사</dt>
+                          <dd>{book.publisher || "—"}</dd>
+                          <dt>발행일</dt>
+                          <dd>{book.publicationYear || "—"}</dd>
+                          <dt>발행지</dt>
+                          <dd>{book.publishPlace || "—"}</dd>
+                          <dt>청구기호</dt>
+                          <dd>{book.callNo || "—"}</dd>
+                        </dl>
                       </div>
-                      <div className={styles.foldImageWrap}>
-                        {proxied ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            className={styles.foldImage}
-                            src={proxied}
-                            alt=""
-                            loading="lazy"
-                            onError={(e) => {
-                              const img = e.currentTarget;
-                              img.style.display = "none";
-                              const parent = img.parentElement;
-                              if (parent && !parent.querySelector(`.${styles.foldUnavailable}`)) {
-                                const u = document.createElement("div");
-                                u.className = styles.foldUnavailable;
-                                u.textContent = "Unavailable";
-                                parent.appendChild(u);
-                              }
-                            }}
-                          />
-                        ) : (
-                          <div className={styles.foldUnavailable}>Unavailable</div>
-                        )}
+                      <div className={styles.foldBottom}>
+                        <dl>
+                          <dt>ISBN</dt>
+                          <dd>{book.isbn13 || "—"}</dd>
+                          <dt>판형</dt>
+                          <dd>{book.form || "—"}</dd>
+                          <dt>페이지</dt>
+                          <dd>{book.pages ? `${book.pages} p.` : "—"}</dd>
+                          <dt>입고날짜</dt>
+                          <dd>{book.registrationDate || "—"}</dd>
+                          <dt>언어</dt>
+                          <dd>{book.language || "—"}</dd>
+                        </dl>
                       </div>
                     </div>
                   </td>

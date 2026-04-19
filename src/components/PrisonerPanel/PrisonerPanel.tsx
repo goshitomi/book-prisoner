@@ -4,7 +4,6 @@ import { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import type { BookPrisonerPair } from "@/lib/types";
 import { useHoverSync } from "@/components/HoverSync/HoverSyncContext";
-import { toProxied } from "@/lib/utils/imageProxy";
 import styles from "./PrisonerPanel.module.css";
 
 export type PrisonerSortKey =
@@ -96,7 +95,6 @@ export function PrisonerPanel({
             const rowKey = book.isbn13 || book.callNo || `${book.title}-${idx}`;
             const onActivate = () => book.isbn13 && router.push(`/book/${book.isbn13}`);
             const isHovered = hoveredKey === rowKey;
-            const proxied = toProxied(prisoner.mugshot);
             return (
               <tbody
                 key={rowKey}
@@ -125,61 +123,35 @@ export function PrisonerPanel({
                 <tr className={styles.detail} aria-hidden="true">
                   <td colSpan={6}>
                     <div className={styles.fold}>
-                      <div className={styles.foldMeta}>
-                        <div className={styles.foldTop}>
-                          <dl>
-                            <dt>수감자</dt>
-                            <dd>{prisoner.name || "—"}</dd>
-                            <dt>공범</dt>
-                            <dd>{prisoner.coConspirators || "—"}</dd>
-                            <dt>출생기관</dt>
-                            <dd>{prisoner.birthInstitution || "—"}</dd>
-                            <dt>출생년도</dt>
-                            <dd>{prisoner.birthYear || "—"}</dd>
-                            <dt>국적</dt>
-                            <dd>{prisoner.nationality || "—"}</dd>
-                            <dt>수인번호</dt>
-                            <dd>{prisoner.inmateNumber || "—"}</dd>
-                          </dl>
-                        </div>
-                        <div className={styles.foldBottom}>
-                          <dl>
-                            <dt>ID Number</dt>
-                            <dd>{prisoner.residentId || "—"}</dd>
-                            <dt>키/몸무게</dt>
-                            <dd>{prisoner.height || "—"}</dd>
-                            <dt>형량</dt>
-                            <dd>{prisoner.sentence || "—"}</dd>
-                            <dt>수감일자</dt>
-                            <dd>{prisoner.incarcerationDate || "—"}</dd>
-                            <dt>구사 언어</dt>
-                            <dd>{prisoner.spokenLanguage || "—"}</dd>
-                          </dl>
-                        </div>
+                      <div className={styles.foldTop}>
+                        <dl>
+                          <dt>수감자</dt>
+                          <dd>{prisoner.name || "—"}</dd>
+                          <dt>공범</dt>
+                          <dd>{prisoner.coConspirators || "—"}</dd>
+                          <dt>출생기관</dt>
+                          <dd>{prisoner.birthInstitution || "—"}</dd>
+                          <dt>출생년도</dt>
+                          <dd>{prisoner.birthYear || "—"}</dd>
+                          <dt>국적</dt>
+                          <dd>{prisoner.nationality || "—"}</dd>
+                          <dt>수인번호</dt>
+                          <dd>{prisoner.inmateNumber || "—"}</dd>
+                        </dl>
                       </div>
-                      <div className={styles.foldImageWrap}>
-                        {proxied ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            className={styles.foldImage}
-                            src={proxied}
-                            alt=""
-                            loading="lazy"
-                            onError={(e) => {
-                              const img = e.currentTarget;
-                              img.style.display = "none";
-                              const parent = img.parentElement;
-                              if (parent && !parent.querySelector(`.${styles.foldUnavailable}`)) {
-                                const u = document.createElement("div");
-                                u.className = styles.foldUnavailable;
-                                u.textContent = "Unavailable";
-                                parent.appendChild(u);
-                              }
-                            }}
-                          />
-                        ) : (
-                          <div className={styles.foldUnavailable}>Unavailable</div>
-                        )}
+                      <div className={styles.foldBottom}>
+                        <dl>
+                          <dt>ID Number</dt>
+                          <dd>{prisoner.residentId || "—"}</dd>
+                          <dt>키/몸무게</dt>
+                          <dd>{prisoner.height || "—"}</dd>
+                          <dt>형량</dt>
+                          <dd>{prisoner.sentence || "—"}</dd>
+                          <dt>수감일자</dt>
+                          <dd>{prisoner.incarcerationDate || "—"}</dd>
+                          <dt>구사 언어</dt>
+                          <dd>{prisoner.spokenLanguage || "—"}</dd>
+                        </dl>
                       </div>
                     </div>
                   </td>
