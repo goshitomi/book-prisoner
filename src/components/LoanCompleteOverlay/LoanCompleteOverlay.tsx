@@ -75,7 +75,7 @@ export function LoanCompleteOverlay({ pair, swapped, onClose }: Props) {
           <dd className="num">{pair.book.callNo ?? "—"}</dd>
         </dl>
         <p className={styles.body} aria-live="assertive">
-          귀하의 대출 신청이 정상적으로 접수되었습니다.
+          대출신청이 완료되었습니다.
         </p>
       </div>
       <div>
@@ -100,7 +100,7 @@ export function LoanCompleteOverlay({ pair, swapped, onClose }: Props) {
           <dd className="num">{pair.prisoner.inmateNumber}</dd>
         </dl>
         <p className={styles.body} aria-live="assertive">
-          귀하의 면회 신청이 정상적으로 접수되었습니다.
+          면회신청이 완료되었습니다.
         </p>
       </div>
       <div>

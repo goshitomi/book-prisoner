@@ -119,27 +119,11 @@ export function LandingShell({ data }: Props) {
       }
       return next;
     });
-    // reverse 직후 양쪽 패널을 페이지 최상단으로 부드럽게 복귀.
-    requestAnimationFrame(() => {
-      const panels = document.querySelectorAll<HTMLElement>('[data-panel="left"], [data-panel="right"]');
-      panels.forEach((p) => {
-        try {
-          p.scrollTo({ top: 0, behavior: "smooth" });
-        } catch {
-          p.scrollTop = 0;
-        }
-      });
-      try {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } catch {
-        window.scrollTo(0, 0);
-      }
-    });
   }, []);
 
   useEffect(() => {
     splitRef.current?.resetScroll();
-  }, [swapped, data.page]);
+  }, [data.page]);
 
   useEffect(() => {
     const FULL = "Book as Prisoner";
