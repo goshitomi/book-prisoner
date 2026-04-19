@@ -70,8 +70,13 @@ function sortPairs(
   return decorated.map((d) => d.p);
 }
 
+function readInitialSwapped(): boolean {
+  if (typeof document === "undefined") return false;
+  return document.documentElement.getAttribute("data-swapped") === "1";
+}
+
 export function LandingShell({ data }: Props) {
-  const [swapped, setSwapped] = useState(false);
+  const [swapped, setSwapped] = useState<boolean>(readInitialSwapped);
   const splitRef = useRef<SplitScreenHandle>(null);
   const router = useRouter();
   const params = useSearchParams();
@@ -89,10 +94,19 @@ export function LandingShell({ data }: Props) {
     else router.push("/");
   }, [router, searchValue]);
 
+  // intro 애니메이션은 세션 내 1회만 재생.
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(SWAP_STORAGE_KEY);
-      if (saved === "1") setSwapped(true);
+      if (sessionStorage.getItem("intro-played") === "1") return;
+      const t = setTimeout(() => {
+        try {
+          sessionStorage.setItem("intro-played", "1");
+          document.documentElement.setAttribute("data-intro-played", "1");
+        } catch {
+          /* ignore */
+        }
+      }, 1200);
+      return () => clearTimeout(t);
     } catch {
       /* ignore */
     }
@@ -103,6 +117,8 @@ export function LandingShell({ data }: Props) {
       const next = !prev;
       try {
         localStorage.setItem(SWAP_STORAGE_KEY, next ? "1" : "0");
+        if (next) document.documentElement.setAttribute("data-swapped", "1");
+        else document.documentElement.removeAttribute("data-swapped");
       } catch {
         /* ignore */
       }
@@ -116,8 +132,9 @@ export function LandingShell({ data }: Props) {
 
   useEffect(() => {
     const FULL = "Book as Prisoner";
-    let pos = 0;
+    const OVERDUE = "(⚠) Book as Prisoner — overdue";
     let tid: ReturnType<typeof setTimeout> | null = null;
+    let toggled = false;
 
     const stop = () => {
       if (tid) clearTimeout(tid);
@@ -125,27 +142,21 @@ export function LandingShell({ data }: Props) {
       document.title = FULL;
     };
 
-    const step = () => {
+    const cycle = () => {
       if (document.visibilityState === "visible") {
         stop();
         return;
       }
-      pos++;
-      if (pos > FULL.length) {
-        pos = 0;
-        document.title = FULL;
-        tid = setTimeout(step, 1200);
-      } else {
-        document.title = FULL.slice(0, pos);
-        tid = setTimeout(step, 110);
-      }
+      toggled = !toggled;
+      document.title = toggled ? OVERDUE : FULL;
+      tid = setTimeout(cycle, 3000);
     };
 
     const onVis = () => {
       if (document.visibilityState === "hidden") {
         if (!tid) {
-          pos = 0;
-          tid = setTimeout(step, 600);
+          toggled = false;
+          tid = setTimeout(cycle, 3000);
         }
       } else {
         stop();
@@ -177,7 +188,8 @@ export function LandingShell({ data }: Props) {
     [data.items, sortKey, sortDir],
   );
 
-  const showCursor = process.env.NEXT_PUBLIC_ENABLE_DUAL_CURSOR !== "false";
+  // 듀얼 커서는 좌/우 모양이 태생적으로 일치하지 않으므로 기본 OFF. 전시 환경에서만 env로 opt-in.
+  const showCursor = process.env.NEXT_PUBLIC_ENABLE_DUAL_CURSOR === "true";
 
   const leftPagination = <Pagination page={data.page} totalPages={data.totalPages} />;
   const rightPagination = (
@@ -190,11 +202,11 @@ export function LandingShell({ data }: Props) {
 
   const bookLeading = (
     <div className={bookStyles.leading}>
-      <h2 className={bookStyles.titleBlock}>
+      <h1 className={bookStyles.titleBlock}>
         <Link href="/" className={bookStyles.titleLink} aria-label="홈으로">
           List of Books
         </Link>
-      </h2>
+      </h1>
       <SearchBar
         value={searchValue}
         onChange={setSearchValue}
@@ -213,11 +225,11 @@ export function LandingShell({ data }: Props) {
   );
   const prisonerLeading = (
     <div className={prisonerStyles.leading}>
-      <h2 className={prisonerStyles.titleBlock}>
+      <h1 className={prisonerStyles.titleBlock}>
         <Link href="/" className={prisonerStyles.titleLink} aria-label="홈으로">
           List of Prisoners
         </Link>
-      </h2>
+      </h1>
       <SearchBar
         value={searchValue}
         onChange={setSearchValue}

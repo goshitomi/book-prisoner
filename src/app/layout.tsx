@@ -19,9 +19,18 @@ export const viewport: Viewport = {
   themeColor: "#ffffff",
 };
 
+const BOOT_SCRIPT = `try{
+var h=document.documentElement;
+if(sessionStorage.getItem("intro-played")==="1")h.setAttribute("data-intro-played","1");
+if(localStorage.getItem("overdue.swapped")==="1")h.setAttribute("data-swapped","1");
+}catch(e){}`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
+      </head>
       <body>
         <a href="#main" className="skipLink">
           본문으로 건너뛰기

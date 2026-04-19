@@ -144,16 +144,21 @@ const NON_BOOK_KEYWORDS = [
 ];
 
 function isBookLike(item: { isbn: string; media_name: string; type_name: string; call_no: string }): boolean {
-  const isbnDigits = item.isbn.replace(/[^0-9Xx]/g, "");
-  const hasIsbn13 = /^(978|979)\d{10}$/.test(isbnDigits);
-  if (hasIsbn13) return true;
+  // 공백/하이픈으로 이어붙인 다중 ISBN 중 하나라도 ISBN-13/10이면 도서로 인정.
+  const tokens = item.isbn.replace(/-/g, " ").split(/\s+/).filter(Boolean);
+  const hasIsbn13 = tokens.some((t) => /^(97[89])\d{10}$/.test(t));
+  const hasIsbn10 = tokens.some((t) => /^\d{9}[\dXx]$/i.test(t));
+  if (hasIsbn13 || hasIsbn10) return true;
 
   const tag = `${item.media_name} ${item.type_name}`.toLowerCase();
   for (const kw of NON_BOOK_KEYWORDS) {
     if (tag.includes(kw.toLowerCase())) return false;
   }
-  // ISBN이 없고, type 정보도 없으면 제외 (비도서 가능성 높음).
-  return Boolean(item.isbn);
+
+  // ISBN이 비어있어도 인쇄자료/도서류면 통과 (고서·희귀자료).
+  const isPrintBook =
+    item.type_name.includes("도서") && item.media_name.includes("인쇄자료");
+  return isPrintBook;
 }
 
 function stripTypeFields(item: NLRawItem & { media_name?: string; type_name?: string }): NLRawItem {
@@ -193,21 +198,37 @@ export async function searchNL(params: NLSearchParams) {
 // "대한민국"은 35/50 고유 제목, ISBN 19/50 — 가장 균형 잡힌 랜딩 키워드.
 const LANDING_KEYWORD = "대한민국";
 
+// NL API의 pageSize 상한(=100)을 넘지 않도록 여러 페이지로 나눠 샘플링.
+const NL_PAGE_SIZE_CAP = 100;
+
 export async function fetchNLNewBooks(
   pageSize = 20,
   pageNum = 1,
 ): Promise<{ items: NLRawItem[]; total: number }> {
-  const qs = new URLSearchParams();
-  qs.set("systemType", "오프라인자료");
-  qs.set("category", "도서");
-  qs.set("kwd", LANDING_KEYWORD);
-  qs.set("pageNum", String(pageNum));
-  qs.set("pageSize", String(pageSize * 5));
-  const { items, total } = await request(qs);
+  const want = Math.min(pageSize * 5, 300);
+  const pagesNeeded = Math.ceil(want / NL_PAGE_SIZE_CAP);
+
+  const results = await Promise.all(
+    Array.from({ length: pagesNeeded }, (_, i) => {
+      const qs = new URLSearchParams();
+      qs.set("systemType", "오프라인자료");
+      qs.set("category", "도서");
+      qs.set("kwd", LANDING_KEYWORD);
+      qs.set("pageNum", String((pageNum - 1) * pagesNeeded + i + 1));
+      qs.set("pageSize", String(Math.min(want - i * NL_PAGE_SIZE_CAP, NL_PAGE_SIZE_CAP)));
+      return request(qs).catch((err) => {
+        console.warn("[nl] newBooks sub-fetch failed", err);
+        return { items: [], total: 0 };
+      });
+    }),
+  );
+
+  const total = results[0]?.total ?? 0;
+  const allItems = results.flatMap((r) => r.items);
 
   const seen = new Set<string>();
   const unique: NLRawItem[] = [];
-  for (const item of items) {
+  for (const item of allItems) {
     const key = item.title_info.trim();
     if (!key || seen.has(key)) continue;
     seen.add(key);

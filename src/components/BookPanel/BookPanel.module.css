@@ -12,7 +12,10 @@
   justify-content: space-between;
   gap: 16px;
   background: #ffffff;
-  animation: drawFade 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) 4.2s both;
+}
+
+:global(html:not([data-intro-played="1"])) .leading {
+  animation: drawFade 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s both;
 }
 
 .titleBlock {
@@ -35,7 +38,10 @@
   font-size: 12px;
   table-layout: fixed;
   color: #000000;
-  animation: tableReveal 2.5s cubic-bezier(0.7, 0, 0.84, 0) 1.6s both;
+}
+
+:global(html:not([data-intro-played="1"])) .table {
+  animation: tableReveal 0.6s cubic-bezier(0.7, 0, 0.84, 0) 0.1s both;
 }
 
 .table thead th,
@@ -306,5 +312,60 @@
   .table,
   .leading {
     animation: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .root {
+    min-height: auto;
+  }
+  .leading {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 16px;
+  }
+  .table {
+    display: block;
+  }
+  .table thead {
+    display: none;
+  }
+  .group {
+    display: block;
+    border-bottom: 4px solid #000000;
+    padding: 12px 16px;
+  }
+  .main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .main td {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 0;
+    border: none !important;
+  }
+  .main td::before {
+    content: attr(data-label);
+    font-family: var(--font-en);
+    font-size: 11px;
+    color: #555;
+    letter-spacing: 0.03em;
+    flex: 0 0 auto;
+  }
+  .main td:first-child::before {
+    display: none;
+  }
+  .main td:first-child {
+    display: block;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0e0 !important;
+    margin-bottom: 8px;
+  }
+  .detail {
+    display: none;
   }
 }

@@ -27,9 +27,12 @@
   z-index: 90;
   transform: translateX(-50%);
   transform-origin: top;
-  animation: drawSplit 1.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
   transition: width 0.22s cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: width;
+}
+
+:global(html:not([data-intro-played="1"])) .splitLine {
+  animation: drawSplit 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 @keyframes drawSplit {
@@ -72,5 +75,26 @@
 @media (prefers-reduced-motion: reduce) {
   .splitLine {
     animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .root {
+    display: block;
+    width: 100vw;
+    height: auto;
+    min-height: 100vh;
+  }
+  .panel {
+    height: auto;
+    min-height: 50vh;
+    overflow-y: visible;
+  }
+  .panel + .panel {
+    border-top: 4px solid #000000;
+  }
+  .splitLine,
+  .handle {
+    display: none;
   }
 }

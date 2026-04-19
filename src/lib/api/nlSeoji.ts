@@ -1,9 +1,11 @@
 import type { NLSeojiRawItem } from "../types";
 import { kvGet, kvSet } from "../cache/kv";
 import { CACHE_TTL } from "../constants";
+import { runWithLimit } from "../utils/concurrency";
 
 const SEOJI_BASE = "https://www.nl.go.kr/seoji/SearchApi.do";
 const CONCURRENCY = 5;
+const TIMEOUT_MS = 5000;
 
 async function fetchSingleSeoji(isbn: string): Promise<Partial<NLSeojiRawItem> | null> {
   const cacheKey = `seoji:${isbn}`;
@@ -20,7 +22,7 @@ async function fetchSingleSeoji(isbn: string): Promise<Partial<NLSeojiRawItem> |
   try {
     const res = await fetch(url.toString(), {
       next: { revalidate: CACHE_TTL.BOOK_DETAIL },
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(TIMEOUT_MS),
     });
     if (!res.ok) return null;
     const json = (await res.json()) as { docs?: Array<Partial<NLSeojiRawItem>> };
@@ -30,29 +32,6 @@ async function fetchSingleSeoji(isbn: string): Promise<Partial<NLSeojiRawItem> |
   } catch {
     return null;
   }
-}
-
-async function runWithLimit<T>(
-  items: string[],
-  worker: (item: string) => Promise<T | null>,
-  limit: number,
-): Promise<(T | null)[]> {
-  const results: (T | null)[] = new Array(items.length).fill(null);
-  let next = 0;
-  const run = async () => {
-    while (next < items.length) {
-      const i = next++;
-      try {
-        results[i] = await worker(items[i]);
-      } catch {
-        results[i] = null;
-      }
-    }
-  };
-  await Promise.all(
-    Array.from({ length: Math.min(limit, items.length) }, () => run()),
-  );
-  return results;
 }
 
 export async function fetchSeojiBatch(

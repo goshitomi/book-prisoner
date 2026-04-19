@@ -93,7 +93,10 @@ export function PrisonerPanel({
           </thead>
           {items.map(({ book, prisoner }, idx) => {
             const rowKey = book.isbn13 || book.callNo || `${book.title}-${idx}`;
-            const onActivate = () => book.isbn13 && router.push(`/book/${book.isbn13}`);
+            const canOpen = Boolean(book.isbn13);
+            const onActivate = () => {
+              if (canOpen) router.push(`/book/${book.isbn13}`);
+            };
             const isHovered = hoveredKey === rowKey;
             return (
               <tbody
@@ -101,24 +104,33 @@ export function PrisonerPanel({
                 className={styles.group}
                 data-hovered={isHovered ? "1" : "0"}
                 onMouseEnter={() => setHovered(rowKey)}
-                onMouseLeave={() => setHovered(null)}
+                onMouseLeave={() =>
+                  setHovered((cur) => (cur === rowKey ? null : cur))
+                }
               >
                 <tr
                   className={styles.main}
-                  onClick={onActivate}
-                  tabIndex={0}
+                  onClick={canOpen ? onActivate : undefined}
+                  tabIndex={canOpen ? 0 : -1}
+                  role={canOpen ? "button" : undefined}
+                  aria-disabled={!canOpen || undefined}
+                  style={{ cursor: canOpen ? "pointer" : "default" }}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") onActivate();
+                    if (!canOpen) return;
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onActivate();
+                    }
                   }}
                 >
-                  <td>
+                  <td data-label="수감자">
                     <div className={styles.name}>{prisoner.name}</div>
                   </td>
-                  <td className={styles.num}>{prisoner.birthYear || "—"}</td>
-                  <td className={styles.num}>{prisoner.residentId || "—"}</td>
-                  <td className={styles.num}>{prisoner.height || "—"}</td>
-                  <td className={styles.num}>{prisoner.incarcerationDate ?? "—"}</td>
-                  <td className={styles.num}>{prisoner.inmateNumber || "—"}</td>
+                  <td className={styles.num} data-label="출생년도">{prisoner.birthYear || "—"}</td>
+                  <td className={styles.num} data-label="ID Number">{prisoner.residentId || "—"}</td>
+                  <td className={styles.num} data-label="키/몸무게">{prisoner.height || "—"}</td>
+                  <td className={styles.num} data-label="수감일자">{prisoner.incarcerationDate ?? "—"}</td>
+                  <td className={styles.num} data-label="수인번호">{prisoner.inmateNumber || "—"}</td>
                 </tr>
                 <tr className={styles.detail} aria-hidden="true">
                   <td colSpan={6}>

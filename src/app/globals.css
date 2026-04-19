@@ -79,7 +79,7 @@ a {
   font-family: var(--font-en);
 }
 
-:focus {
+:focus:not(:focus-visible) {
   outline: none;
 }
 

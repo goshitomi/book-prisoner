@@ -26,6 +26,7 @@ export function SearchBar({
 
   // 입력값이 없고 포커스도 없을 때만 타이프라이터 작동.
   // 한 글자씩 타이핑 → 1.4초 대기 → 한 글자씩 삭제 → 다음 예시.
+  // AbortController로 React StrictMode 이중 실행 및 cleanup race를 엄격히 차단.
   useEffect(() => {
     if (!examples || examples.length === 0) return;
     if (value || focused) {
@@ -33,31 +34,36 @@ export function SearchBar({
       return;
     }
 
-    let cancelled = false;
+    const ctrl = new AbortController();
+    const { signal } = ctrl;
     let idx = 0;
 
     const run = async () => {
-      while (!cancelled) {
-        const word = examples[idx % examples.length];
-        for (let i = 1; i <= word.length; i++) {
-          if (cancelled) return;
-          setTyped(word.slice(0, i));
-          await wait(90);
+      try {
+        while (!signal.aborted) {
+          const word = examples[idx % examples.length];
+          for (let i = 1; i <= word.length; i++) {
+            if (signal.aborted) return;
+            setTyped(word.slice(0, i));
+            await wait(90, signal);
+          }
+          await wait(1400, signal);
+          if (signal.aborted) return;
+          for (let i = word.length; i >= 0; i--) {
+            if (signal.aborted) return;
+            setTyped(word.slice(0, i));
+            await wait(45, signal);
+          }
+          await wait(300, signal);
+          idx++;
         }
-        await wait(1400);
-        if (cancelled) return;
-        for (let i = word.length; i >= 0; i--) {
-          if (cancelled) return;
-          setTyped(word.slice(0, i));
-          await wait(45);
-        }
-        await wait(300);
-        idx++;
+      } catch {
+        /* aborted */
       }
     };
     run();
     return () => {
-      cancelled = true;
+      ctrl.abort();
     };
   }, [examples, value, focused]);
 
@@ -93,6 +99,20 @@ export function SearchBar({
   );
 }
 
-function wait(ms: number): Promise<void> {
-  return new Promise((r) => setTimeout(r, ms));
+function wait(ms: number, signal?: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(new DOMException("Aborted", "AbortError"));
+      return;
+    }
+    const id = setTimeout(() => {
+      signal?.removeEventListener("abort", onAbort);
+      resolve();
+    }, ms);
+    const onAbort = () => {
+      clearTimeout(id);
+      reject(new DOMException("Aborted", "AbortError"));
+    };
+    signal?.addEventListener("abort", onAbort, { once: true });
+  });
 }

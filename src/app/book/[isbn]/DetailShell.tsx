@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { SplitScreen } from "@/components/SplitScreen/SplitScreen";
 import { ReverseButton } from "@/components/ReverseButton/ReverseButton";
 import { LoanCompleteOverlay } from "@/components/LoanCompleteOverlay/LoanCompleteOverlay";
@@ -17,24 +17,22 @@ const DualCursor = dynamic(
 
 const SWAP_STORAGE_KEY = "overdue.swapped";
 
-export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
-  const [swapped, setSwapped] = useState(false);
-  const [overlayOpen, setOverlayOpen] = useState(false);
+function readInitialSwapped(): boolean {
+  if (typeof document === "undefined") return false;
+  return document.documentElement.getAttribute("data-swapped") === "1";
+}
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(SWAP_STORAGE_KEY);
-      if (saved === "1") setSwapped(true);
-    } catch {
-      /* ignore */
-    }
-  }, []);
+export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
+  const [swapped, setSwapped] = useState<boolean>(readInitialSwapped);
+  const [overlayOpen, setOverlayOpen] = useState(false);
 
   const toggleSwap = useCallback(() => {
     setSwapped((prev) => {
       const next = !prev;
       try {
         localStorage.setItem(SWAP_STORAGE_KEY, next ? "1" : "0");
+        if (next) document.documentElement.setAttribute("data-swapped", "1");
+        else document.documentElement.removeAttribute("data-swapped");
       } catch {
         /* ignore */
       }
@@ -45,7 +43,7 @@ export function DetailShell({ pair }: { pair: BookPrisonerPair }) {
   const onRequest = () => setOverlayOpen(true);
   const onClose = () => setOverlayOpen(false);
 
-  const showCursor = process.env.NEXT_PUBLIC_ENABLE_DUAL_CURSOR !== "false";
+  const showCursor = process.env.NEXT_PUBLIC_ENABLE_DUAL_CURSOR === "true";
 
   const bookSide = <DetailBookSide pair={pair} onRequest={onRequest} />;
   const prisonerSide = <DetailPrisonerSide pair={pair} onRequest={onRequest} />;

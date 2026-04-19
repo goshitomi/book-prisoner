@@ -1,21 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
 import { searchNL, fetchNLNewBooks } from "@/lib/api/nl";
 import { fetchSeojiBatch } from "@/lib/api/nlSeoji";
 import { fetchBookEnrichment } from "@/lib/api/data4library";
 import { kvGet, kvSet } from "@/lib/cache/kv";
 import { mapBookToPrisoner, normalizeBook } from "@/lib/mapBookToPrisoner";
-import { extractIsbn13, isIsbnLike } from "@/lib/utils/isbn";
+import { extractIsbn13, isIsbnLike, sanitizeIsbn } from "@/lib/utils/isbn";
 import fallbackData from "@/lib/fallback/prisoners.json";
 import { CACHE_TTL, MAX_PAGES, PAGE_SIZE } from "@/lib/constants";
-import type { BookPrisonerPair, FallbackReason, NLRawItem, SearchResponse } from "@/lib/types";
+import type {
+  BookPrisonerPair,
+  FallbackReason,
+  NLRawItem,
+  SearchResponse,
+} from "@/lib/types";
 
-export const runtime = "nodejs";
-
-function cleanQuery(raw: string | null): string | null {
-  if (!raw) return null;
-  const trimmed = raw.trim().replace(/\s+/g, " ");
-  return trimmed || null;
-}
+// 캐시 키 버전은 이 파일에서 단일 관리. 스키마 변경 시 CACHE_VERSION만 올리면 전사 무효화.
+const CACHE_VERSION = "v3";
 
 function dedupByIsbn(items: NLRawItem[]): NLRawItem[] {
   const seen = new Set<string>();
@@ -30,17 +29,15 @@ function dedupByIsbn(items: NLRawItem[]): NLRawItem[] {
   return out;
 }
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const query = cleanQuery(searchParams.get("q"));
-  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10) || 1);
-
+export async function loadSearch(
+  query: string | null,
+  page: number,
+): Promise<SearchResponse> {
   const cacheKey = query
-    ? `v2:search:${encodeURIComponent(query)}:${page}`
-    : `v2:newbooks:${page}`;
-
+    ? `${CACHE_VERSION}:search:${encodeURIComponent(query)}:${page}`
+    : `${CACHE_VERSION}:newbooks:${page}`;
   const cached = await kvGet<SearchResponse>(cacheKey);
-  if (cached) return NextResponse.json(cached);
+  if (cached) return cached;
 
   try {
     let skeleton: NLRawItem[];
@@ -97,13 +94,16 @@ export async function GET(req: NextRequest) {
       return { book, prisoner };
     });
 
+    // 홈(쿼리 없음)은 5페이지까지만 표시 — 그 이후 NL API가 빈 결과/에러를 자주 반환.
+    // 검색은 호출 가능한 모든 페이지(MAX_PAGES) 허용.
+    const pageCap = query ? MAX_PAGES : 5;
     const displayableTotal = Math.min(
       total || pairs.length,
-      PAGE_SIZE * MAX_PAGES,
+      PAGE_SIZE * pageCap,
     );
     const totalPages = Math.min(
       Math.max(1, Math.ceil(displayableTotal / PAGE_SIZE)),
-      MAX_PAGES,
+      pageCap,
     );
 
     const response: SearchResponse = {
@@ -119,12 +119,11 @@ export async function GET(req: NextRequest) {
 
     const ttl = query ? CACHE_TTL.SEARCH : CACHE_TTL.NEW_BOOKS;
     await kvSet(cacheKey, response, ttl);
-
-    return NextResponse.json(response);
+    return response;
   } catch (err) {
-    console.error("[search] failed, using local fallback", err);
+    console.error("[loadSearch] failed, using local fallback", err);
     const items = (fallbackData as BookPrisonerPair[]).slice(0, PAGE_SIZE);
-    const response: SearchResponse = {
+    return {
       items,
       page: 1,
       pageSize: PAGE_SIZE,
@@ -134,6 +133,50 @@ export async function GET(req: NextRequest) {
       fallbackReason: "api_down",
       query,
     };
-    return NextResponse.json(response);
+  }
+}
+
+export async function loadPair(
+  rawIsbn: string,
+): Promise<BookPrisonerPair | null> {
+  const isbn = sanitizeIsbn(rawIsbn);
+  if (!isbn || isbn.length !== 13) return null;
+
+  const cacheKey = `${CACHE_VERSION}:book:${isbn}`;
+  const cached = await kvGet<BookPrisonerPair>(cacheKey);
+  if (cached) return cached;
+
+  try {
+    const { items } = await searchNL({ isbn, pageNum: 1, pageSize: 10 });
+    const raw =
+      items.find((item) => extractIsbn13(item.isbn) === isbn) ?? items[0];
+    if (!raw) {
+      const fallback = (fallbackData as BookPrisonerPair[]).find(
+        (p) => p.book.isbn13 === isbn,
+      );
+      return fallback ?? null;
+    }
+    const [seojiMap, enrichmentMap] = await Promise.all([
+      fetchSeojiBatch([isbn]),
+      fetchBookEnrichment([isbn]),
+    ]);
+    const seoji = seojiMap[isbn] ?? {};
+    const enrichment = enrichmentMap[isbn] ?? {};
+    const book = normalizeBook(
+      raw,
+      seoji,
+      enrichment.bookImageURL ?? null,
+      enrichment.reg_date ?? null,
+    );
+    const prisoner = mapBookToPrisoner(book);
+    const pair: BookPrisonerPair = { book, prisoner };
+    await kvSet(cacheKey, pair, CACHE_TTL.BOOK_DETAIL);
+    return pair;
+  } catch (err) {
+    console.error("[loadPair] failed", err);
+    const fallback = (fallbackData as BookPrisonerPair[]).find(
+      (p) => p.book.isbn13 === isbn,
+    );
+    return fallback ?? null;
   }
 }

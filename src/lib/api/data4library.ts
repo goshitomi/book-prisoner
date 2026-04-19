@@ -1,8 +1,10 @@
 import { kvGet, kvSet } from "../cache/kv";
 import { CACHE_TTL } from "../constants";
+import { runWithLimit } from "../utils/concurrency";
 
 const D4L_BASE = "https://data4library.kr/api";
 const CONCURRENCY = 5;
+const TIMEOUT_MS = 5000;
 
 interface D4LBookDetail {
   bookImageURL?: string;
@@ -24,7 +26,7 @@ async function fetchSingleDetail(isbn: string): Promise<D4LBookDetail | null> {
   try {
     const res = await fetch(url.toString(), {
       next: { revalidate: CACHE_TTL.IMAGE },
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(TIMEOUT_MS),
     });
     if (!res.ok) return null;
     const json = (await res.json()) as {
@@ -38,29 +40,6 @@ async function fetchSingleDetail(isbn: string): Promise<D4LBookDetail | null> {
   } catch {
     return null;
   }
-}
-
-async function runWithLimit<T>(
-  items: string[],
-  worker: (item: string) => Promise<T | null>,
-  limit: number,
-): Promise<(T | null)[]> {
-  const results: (T | null)[] = new Array(items.length).fill(null);
-  let next = 0;
-  const run = async () => {
-    while (next < items.length) {
-      const i = next++;
-      try {
-        results[i] = await worker(items[i]);
-      } catch {
-        results[i] = null;
-      }
-    }
-  };
-  await Promise.all(
-    Array.from({ length: Math.min(limit, items.length) }, () => run()),
-  );
-  return results;
 }
 
 export async function fetchBookEnrichment(

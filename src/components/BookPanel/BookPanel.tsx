@@ -93,7 +93,10 @@ export function BookPanel({
           </thead>
           {items.map(({ book }, idx) => {
             const rowKey = book.isbn13 || book.callNo || `${book.title}-${idx}`;
-            const onActivate = () => book.isbn13 && router.push(`/book/${book.isbn13}`);
+            const canOpen = Boolean(book.isbn13);
+            const onActivate = () => {
+              if (canOpen) router.push(`/book/${book.isbn13}`);
+            };
             const isHovered = hoveredKey === rowKey;
             return (
               <tbody
@@ -101,24 +104,33 @@ export function BookPanel({
                 className={styles.group}
                 data-hovered={isHovered ? "1" : "0"}
                 onMouseEnter={() => setHovered(rowKey)}
-                onMouseLeave={() => setHovered(null)}
+                onMouseLeave={() =>
+                  setHovered((cur) => (cur === rowKey ? null : cur))
+                }
               >
                 <tr
                   className={styles.main}
-                  onClick={onActivate}
-                  tabIndex={0}
+                  onClick={canOpen ? onActivate : undefined}
+                  tabIndex={canOpen ? 0 : -1}
+                  role={canOpen ? "button" : undefined}
+                  aria-disabled={!canOpen || undefined}
+                  style={{ cursor: canOpen ? "pointer" : "default" }}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") onActivate();
+                    if (!canOpen) return;
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onActivate();
+                    }
                   }}
                 >
-                  <td>
+                  <td data-label="표제">
                     <div className={styles.title}>{book.title}</div>
                   </td>
-                  <td className={styles.num}>{book.publicationYear || "—"}</td>
-                  <td className={styles.num}>{book.isbn13 || "—"}</td>
-                  <td className={styles.num}>{book.form || "—"}</td>
-                  <td className={styles.num}>{book.registrationDate ?? "—"}</td>
-                  <td className={styles.num}>{book.callNo ?? "—"}</td>
+                  <td className={styles.num} data-label="발행일">{book.publicationYear || "—"}</td>
+                  <td className={styles.num} data-label="ISBN">{book.isbn13 || "—"}</td>
+                  <td className={styles.num} data-label="판형">{book.form || "—"}</td>
+                  <td className={styles.num} data-label="입고날짜">{book.registrationDate ?? "—"}</td>
+                  <td className={styles.num} data-label="청구기호">{book.callNo ?? "—"}</td>
                 </tr>
                 <tr className={styles.detail} aria-hidden="true">
                   <td colSpan={6}>
