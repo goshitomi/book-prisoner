@@ -88,22 +88,23 @@ export function LandingShell({ data }: Props) {
     else router.push("/");
   }, [router, searchValue]);
 
-  // intro 애니메이션은 세션 내 1회만 재생.
+  // 홈에 진입할 때마다 draw-in 인트로 애니메이션을 재실행.
   useEffect(() => {
     try {
-      if (sessionStorage.getItem("intro-played") === "1") return;
-      const t = setTimeout(() => {
-        try {
-          sessionStorage.setItem("intro-played", "1");
-          document.documentElement.setAttribute("data-intro-played", "1");
-        } catch {
-          /* ignore */
-        }
-      }, 1200);
-      return () => clearTimeout(t);
+      sessionStorage.removeItem("intro-played");
+      document.documentElement.removeAttribute("data-intro-played");
     } catch {
       /* ignore */
     }
+    const t = setTimeout(() => {
+      try {
+        sessionStorage.setItem("intro-played", "1");
+        document.documentElement.setAttribute("data-intro-played", "1");
+      } catch {
+        /* ignore */
+      }
+    }, 1200);
+    return () => clearTimeout(t);
   }, []);
 
   const toggleSwap = useCallback(() => {
@@ -117,6 +118,22 @@ export function LandingShell({ data }: Props) {
         /* ignore */
       }
       return next;
+    });
+    // reverse 직후 양쪽 패널을 페이지 최상단으로 부드럽게 복귀.
+    requestAnimationFrame(() => {
+      const panels = document.querySelectorAll<HTMLElement>('[data-panel="left"], [data-panel="right"]');
+      panels.forEach((p) => {
+        try {
+          p.scrollTo({ top: 0, behavior: "smooth" });
+        } catch {
+          p.scrollTop = 0;
+        }
+      });
+      try {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch {
+        window.scrollTo(0, 0);
+      }
     });
   }, []);
 
