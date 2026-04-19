@@ -17,8 +17,10 @@ import type {
 } from "@/lib/types";
 
 // 캐시 키 버전은 이 파일에서 단일 관리. 스키마 변경 시 CACHE_VERSION만 올리면 전사 무효화.
-// v4: 랜딩을 디자인 인기 대출 도서로 교체 + 페이지당 30건 엄수.
-const CACHE_VERSION = "v4";
+// v4: 랜딩을 디자인 인기 대출 도서로 교체 + 페이지당 30건 엄수 (첫 시도, loanItemSrch 런타임 의존).
+// v5: loanItemSrch 의 kdc 파라미터가 단일 자릿수만 허용해 프로덕션에서 항상 0건 반환하던 이슈 수정.
+//     큐레이션 JSON(src/lib/data/design-books.json, 150건)에서 결정론적으로 로드하도록 교체.
+const CACHE_VERSION = "v5";
 
 // 과다 필터링(비도서/중복/ISBN 누락)에 대비한 오버페치 비율.
 // NL 검색 pageSize 상한은 100이므로 PAGE_SIZE * 1.7 ≈ 51 으로 안전.

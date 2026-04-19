@@ -2,6 +2,7 @@ import { kvGet, kvSet } from "../cache/kv";
 import { CACHE_TTL } from "../constants";
 import { runWithLimit } from "../utils/concurrency";
 import type { NLRawItem } from "../types";
+import designBooksData from "../data/design-books.json";
 
 const D4L_BASE = "https://data4library.kr/api";
 const CONCURRENCY = 5;
@@ -156,57 +157,56 @@ function loanDocToNLRaw(d: D4LLoanDoc): NLRawItem {
   };
 }
 
-// 디자인 계열 KDC 분류. 658(상업미술/그래픽 디자인)을 최우선,
-// 부족하면 600(예술 전체)로 보충 — 인기 대출 도서 특성상 해당 카테고리 자체가 편중돼
-// 총 150건을 채우기 어려우므로 2단계로 샘플링한다.
-const DESIGN_KDC_PRIMARY = "658";
-const DESIGN_KDC_FALLBACK = "600";
-// 조회 기간: 최근 1년 인기 대출.
-const POPULAR_WINDOW_DAYS = 365;
+// 랜딩 1-5페이지용 디자인 인기 대출 도서는 로컬 큐레이션 JSON에서 로드한다.
+//
+// 이전에는 loanItemSrch(kdc=658/600)로 런타임 조회했지만, data4library 의 `kdc` 파라미터는
+// **단일 자릿수만 허용**한다(e.g. kdc=6). 2~3자리를 넘기면 에러 없이 빈 docs 를 돌려준다.
+// 결과적으로 프로덕션에서는 항상 빈 배열 → fetchNLNewBooks 폴백 → 정부 보고서 9건만 노출됐다.
+//
+// 안정적이고 결정론적인 5페이지 × 30건 = 150건을 보장하기 위해, kdc=6(예술) 전체에서
+// 클래스번호 접두사(651/652/654/656/657/658/659/662) + 키워드 + 제외 규칙으로 선별해
+// src/lib/data/design-books.json 에 커밋해 둔다. 런타임 API 장애에 영향받지 않는다.
+
+interface DesignBookEntry {
+  isbn13: string;
+  title: string;
+  authors: string;
+  publisher: string;
+  publicationYear: string;
+  classNo: string;
+  imageUrl: string;
+}
+
+const DESIGN_BOOKS: readonly DesignBookEntry[] =
+  designBooksData as DesignBookEntry[];
+
+function designEntryToNLRaw(e: DesignBookEntry): NLRawItem {
+  return {
+    title_info: e.title,
+    author_info: e.authors,
+    pub_info: e.publisher,
+    pub_year_info: e.publicationYear,
+    isbn: e.isbn13,
+    call_no: e.classNo,
+    lang_info: "",
+    image_url: e.imageUrl,
+    reg_date: "",
+    place_info: "",
+  };
+}
 
 export async function fetchPopularDesignBooks(
   pageSize: number,
   pageNum: number,
 ): Promise<{ items: NLRawItem[]; total: number }> {
-  const endDate = new Date();
-  const startDate = new Date(endDate);
-  startDate.setDate(startDate.getDate() - POPULAR_WINDOW_DAYS);
-  const startDt = formatDate(startDate);
-  const endDt = formatDate(endDate);
-
-  // loanItemSrch pageNo 는 1-based. 페이지네이션을 그대로 전달.
-  const primary = await fetchLoanPage({
-    pageNo: pageNum,
-    pageSize,
-    kdc: DESIGN_KDC_PRIMARY,
-    startDt,
-    endDt,
-  });
-
-  let docs = primary;
-
-  // 1차 결과가 요청 수보다 적으면 광의 카테고리(600)로 보충.
-  if (docs.length < pageSize) {
-    const deficit = pageSize - docs.length;
-    const fallback = await fetchLoanPage({
-      pageNo: pageNum,
-      pageSize: deficit * 2,
-      kdc: DESIGN_KDC_FALLBACK,
-      startDt,
-      endDt,
-    });
-    const existing = new Set(docs.map((d) => d.isbn13));
-    for (const d of fallback) {
-      if (docs.length >= pageSize) break;
-      if (d.isbn13 && !existing.has(d.isbn13)) {
-        docs.push(d);
-        existing.add(d.isbn13);
-      }
-    }
-  }
-
-  const items = docs.map(loanDocToNLRaw);
-  // loanItemSrch 는 정확한 total 을 주지 않으므로 5페이지 * pageSize 로 상한을 가정한다.
-  // loadSearch 쪽에서 pageCap(5)으로 재차 클램프되므로 안전하다.
-  return { items, total: pageSize * 5 };
+  const total = DESIGN_BOOKS.length;
+  const start = Math.max(0, (pageNum - 1) * pageSize);
+  const end = Math.min(total, start + pageSize);
+  const slice = start >= total ? [] : DESIGN_BOOKS.slice(start, end);
+  const items = slice.map(designEntryToNLRaw);
+  return { items, total };
 }
+
+// 레거시 (loanItemSrch 기반) 구현이 필요할 때를 대비해 내부 헬퍼는 남겨둔다.
+// formatDate / fetchLoanPage / loanDocToNLRaw 는 다른 KDC 기반 작업에서 재사용 가능.
+export const __popularDesignBooksSource = "local-json";
