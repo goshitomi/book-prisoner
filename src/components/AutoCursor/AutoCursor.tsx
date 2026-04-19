@@ -227,11 +227,15 @@ async function scenarioDragSplitter(api: CursorAPI, signal: Signal) {
       api.setPos(r * w, y);
     });
   };
-  await sweep(0.5, 0.68, 900);
+  const rand = (lo: number, hi: number) => lo + Math.random() * (hi - lo);
+  const a = rand(0.6, 0.78);
+  const b = rand(0.22, 0.4);
+  const final = rand(0.3, 0.7);
+  await sweep(0.5, a, 900);
   await wait(380, signal);
-  await sweep(0.68, 0.34, 1100);
+  await sweep(a, b, 1100);
   await wait(380, signal);
-  await sweep(0.34, 0.5, 800);
+  await sweep(b, final, 800);
 }
 
 async function scenarioReverse(api: CursorAPI, signal: Signal) {
