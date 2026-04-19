@@ -71,6 +71,13 @@ export async function loadSearch(
 
     skeleton = dedupByIsbn(skeleton);
 
+    // 목록에서 상세 페이지로 넘어갈 때 동일 레코드가 보장되도록 ISBN13 없는 항목은 제거.
+    // (ISBN 없으면 /book/[isbn] 라우트로 이동할 수 없어 링크가 끊긴다.)
+    skeleton = skeleton.filter((raw) => {
+      const i = extractIsbn13(raw.isbn);
+      return !!i && i.length === 13;
+    });
+
     const isbns = skeleton
       .map((b) => extractIsbn13(b.isbn))
       .filter((i): i is string => !!i && i.length === 13);
@@ -93,6 +100,22 @@ export async function loadSearch(
       const prisoner = mapBookToPrisoner(book);
       return { book, prisoner };
     });
+
+    // 목록/상세 페이지 간 데이터 일관성 보장:
+    // loadPair는 동일 cacheKey(book:{isbn})를 먼저 조회하므로,
+    // 검색 시점에 결정된 레코드를 그대로 재사용해 NL API가 다른 인스턴스를 돌려줘도
+    // 사용자에게는 동일한 정보가 노출된다.
+    await Promise.all(
+      pairs
+        .filter((p) => p.book.isbn13 && p.book.isbn13.length === 13)
+        .map((p) =>
+          kvSet(
+            `${CACHE_VERSION}:book:${p.book.isbn13}`,
+            p,
+            CACHE_TTL.BOOK_DETAIL,
+          ),
+        ),
+    );
 
     // 홈(쿼리 없음)은 5페이지까지만 표시 — 그 이후 NL API가 빈 결과/에러를 자주 반환.
     // 검색은 호출 가능한 모든 페이지(MAX_PAGES) 허용.

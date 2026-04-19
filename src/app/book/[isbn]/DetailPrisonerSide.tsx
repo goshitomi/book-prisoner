@@ -53,7 +53,7 @@ export function DetailPrisonerSide({ pair, onRequest }: Props) {
       </div>
       <div>
         <Link href="/" className={styles.back}>
-          ← 수감자 명부로 돌아가기
+          ← 돌아가기
         </Link>
       </div>
     </div>

@@ -59,6 +59,11 @@
   border-bottom: 6px solid #000000;
   border-right: 6px solid #000000;
   overflow: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--color-prisoner-bg, #ffffff);
+  background-clip: padding-box;
 }
 
 .table thead th:last-child {
@@ -146,6 +151,15 @@
   transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   background: #ffffff;
   color: #000000;
+}
+
+/* 접힌 부분의 이음매(foldTop 아래/foldBottom 위)를 좁혀
+   grid row-gap(10px)과 시각적 간격을 일치시킴. */
+.foldTop {
+  padding-bottom: 5px;
+}
+.foldBottom {
+  padding-top: 5px;
 }
 
 .foldTop {

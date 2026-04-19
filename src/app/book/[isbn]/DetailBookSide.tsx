@@ -49,7 +49,7 @@ export function DetailBookSide({ pair, onRequest }: Props) {
       </div>
       <div>
         <Link href="/" className={styles.back}>
-          ← 명부로 돌아가기
+          ← 돌아가기
         </Link>
       </div>
     </div>

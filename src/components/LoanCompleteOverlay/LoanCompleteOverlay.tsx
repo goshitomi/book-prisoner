@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import type { BookPrisonerPair } from "@/lib/types";
 import styles from "./LoanCompleteOverlay.module.css";
@@ -45,9 +46,11 @@ export function LoanCompleteOverlay({ pair, swapped, onClose }: Props) {
 
     window.addEventListener("keydown", onKey);
 
-    // 초기 포커스
-    const initialBtn = rootRef.current?.querySelector<HTMLButtonElement>("button");
-    initialBtn?.focus();
+    // 초기 포커스: 패널 내 첫 포커스 가능한 요소(돌아가기 링크).
+    const initialFocusable = rootRef.current?.querySelector<HTMLElement>(
+      'button, [href], input, [tabindex]:not([tabindex="-1"])',
+    );
+    initialFocusable?.focus();
 
     return () => {
       document.body.style.overflow = prevOverflow;
@@ -76,11 +79,9 @@ export function LoanCompleteOverlay({ pair, swapped, onClose }: Props) {
         </p>
       </div>
       <div>
-        <div className={styles.stamp}>접수 완료</div>
-        <br />
-        <button type="button" className={styles.closeBtn} onClick={onClose}>
-          닫기
-        </button>
+        <Link href="/" className={styles.homeLink}>
+          ← 돌아가기(홈)
+        </Link>
       </div>
     </div>
   );
@@ -103,11 +104,9 @@ export function LoanCompleteOverlay({ pair, swapped, onClose }: Props) {
         </p>
       </div>
       <div>
-        <div className={styles.stamp}>허가</div>
-        <br />
-        <button type="button" className={styles.closeBtn} onClick={onClose}>
-          닫기
-        </button>
+        <Link href="/" className={styles.homeLink}>
+          ← 돌아가기(홈)
+        </Link>
       </div>
     </div>
   );
